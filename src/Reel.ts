@@ -6,7 +6,7 @@ export class Reel extends PIXI.Container {
     private symbolSize = 50
     constructor(private readonly rows: number) {
         super()
-        this.addChild(new PIXI.Graphics().beginFill(0xffffff).drawCircle(0,0,5))
+  /*       this.addChild(new PIXI.Graphics().beginFill(0xffffff).drawCircle(0,0,5)) */
         this.container.y = -this.symbolSize * (rows - 1) / 2
         this.createMask()
         for (let i = rows+1; i--;) {
