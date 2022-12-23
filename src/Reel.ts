@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { icons } from './icons'
+import { Ticker } from 'pixi.js'
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
     //
@@ -15,7 +16,12 @@ export class Reel extends PIXI.Container {
         }
     }
     start() {
-
+        const ticker = PIXI.Ticker.shared
+        ticker.add(() =>{
+            this.container.y-0.1
+        })
+        ticker.autoStart=false
+        ticker.start()
     }
     stop() {
 
