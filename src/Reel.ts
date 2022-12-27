@@ -13,7 +13,7 @@ export class Reel extends PIXI.Container {
         for (let i = this.container.children.length - 1; i >= 0; i--) {
             const symbol = this.container.children[i]
 
-            if (this.container.children[0].y + delta * this.speed > app.screen.height - this.yoffset) {
+            if (this.container.children[0].y + delta * this.speed > this.yoffset) {
                 this.container.children[0].destroy()
                 this.createSymbols()
             }
@@ -29,7 +29,7 @@ export class Reel extends PIXI.Container {
         this.container.y = -this.symbolSize * (rows - 1) / 2
         this.createMask()
         this.createSymbols(rows + 1)
-        this.yoffset =(app.screen.height - this.container.children[0].y - this.symbolSize)
+        this.yoffset =(this.container.children[0].y + this.symbolSize)
         /* const yOffset = (app.screen.height - this.container.children[0].y - this.symbolSize) */
     }
     start() {
