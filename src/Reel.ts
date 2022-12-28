@@ -7,12 +7,11 @@ export class Reel extends PIXI.Container {
     private speed = 2
     private symbolSize = 50
     private running = false
-    private yoffset:number
-    private funct = (delta:number)=> {
-        
+    private yoffset: number
+    private funct = (delta: number) => {
+
         for (let i = this.container.children.length - 1; i >= 0; i--) {
             const symbol = this.container.children[i]
-
             if (this.container.children[0].y + delta * this.speed > this.yoffset) {
                 this.container.children[0].destroy()
                 this.createSymbols()
@@ -29,7 +28,7 @@ export class Reel extends PIXI.Container {
         this.container.y = -this.symbolSize * (rows - 1) / 2
         this.createMask()
         this.createSymbols(rows + 1)
-        this.yoffset =(this.container.children[0].y + this.symbolSize)
+        this.yoffset = (this.container.children[0].y + this.symbolSize)
         /* const yOffset = (app.screen.height - this.container.children[0].y - this.symbolSize) */
     }
     start() {
@@ -46,10 +45,12 @@ export class Reel extends PIXI.Container {
         }
     }
 
-    stop() {
-        PIXI.Ticker.shared.stop()
-        this.running = false
-        PIXI.Ticker.shared.remove(this.funct)
+    async stop() {
+        /* if (this.container.children[0].y == this.yoffset - this.symbolSize) { */
+            PIXI.Ticker.shared.stop()
+            this.running = false
+            PIXI.Ticker.shared.remove(this.funct)
+
     }
     private getSprite(id = Math.floor(Math.random() * icons.length)) {
         const sprite = PIXI.Sprite.from(icons[id])
@@ -70,5 +71,5 @@ export class Reel extends PIXI.Container {
             sprite.y = (amount - 1) * this.symbolSize
         }
     }
-    
+
 }
