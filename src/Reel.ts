@@ -4,7 +4,7 @@ import { Ticker } from 'pixi.js'
 import { app } from '.'
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
-    private speed = 0.5
+    private speed = 2
     private symbolSize = 50
     private running = false
     private stopping: boolean
@@ -14,7 +14,7 @@ export class Reel extends PIXI.Container {
 
         if (this.container.y + delta * this.speed > this.i + this.symbolSize) {
             /* this.i += this.symbolSize */
-            this.container.y -= this.symbolSize
+            this.container.y -= this.symbolSize-delta*this.speed
             this.container.children.forEach((child) => child.y += this.symbolSize)
             this.container.children[0].destroy()
             this.createSymbols()
