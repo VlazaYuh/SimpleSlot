@@ -1,7 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { icons } from './icons'
-import { Ticker } from 'pixi.js'
-import { app } from '.'
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
     private speed = 3
@@ -9,14 +7,14 @@ export class Reel extends PIXI.Container {
     private running = false
     private stopping: boolean
     private yOffset: number
-    private i: number
+    private containerOffset: number
     private queue: Array<number> = []
-    private funct = (delta: number) => {
+    private moveContainer = (delta: number) => {
 
-        if (this.container.y + delta * this.speed > this.i + this.symbolSize) {
+        if (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
             let symbol: number
-            this.container.y -= this.symbolSize/* -delta*this.speed */
-            this.container.children.forEach((child) => child.y += this.symbolSize + delta * this.speed)
+            this.container.y -= this.symbolSize-delta*this.speed 
+            this.container.children.forEach((child) => child.y += this.symbolSize /* + delta * this.speed */)
             this.container.children[0].destroy()
             if (this.queue) {
                 symbol = this.queue.pop()
@@ -26,10 +24,10 @@ export class Reel extends PIXI.Container {
 
                 this.createSymbols()
             }
-            if (this.stopping && this.container.children[0].y >= this.yOffset - this.symbolSize + delta * this.speed && symbol == undefined && this.queue.length === 0) {
+            if (this.stopping && this.container.children[0].y >= this.yOffset - this.symbolSize && symbol == undefined && this.queue.length === 0) {
                 this.running = false
                 this.stopping = false
-                PIXI.Ticker.shared.remove(this.funct)
+                PIXI.Ticker.shared.remove(this.moveContainer)
             }
         }
         else {
@@ -41,7 +39,7 @@ export class Reel extends PIXI.Container {
         super()
         /* this.addChild(new PIXI.Graphics().beginFill(0xffffff).drawCircle(0,0,5))  */
         this.container.y = -this.symbolSize * (rows - 1) / 2
-        this.i = this.container.y
+        this.containerOffset = this.container.y
         this.createMask()
         this.createSymbols(rows + 1)
         this.yOffset = (this.symbolSize * rows)
@@ -50,7 +48,7 @@ export class Reel extends PIXI.Container {
         if (this.running) {
             return
         }
-        PIXI.Ticker.shared.add(this.funct)
+        PIXI.Ticker.shared.add(this.moveContainer)
         this.running = true
         this.stopping = false
     }
