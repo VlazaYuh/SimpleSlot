@@ -15,13 +15,13 @@ export class Reel extends PIXI.Container {
             this.container.children.forEach((child) => child.y += this.symbolSize /* + delta * this.speed */)
             this.container.children[0].destroy()
             this.createSymbols()
-            if (this.stopping && this.container.children[0].y >= this.yOffset - this.symbolSize && this.queue.length === 0) {
+            if (this.stopping && this.container.children[0].y === this.yOffset - this.symbolSize && this.queue.length === 0) {
                 this.running = false
                 this.stopping = false
                 PIXI.Ticker.shared.remove(this.moveContainer)
             }
         }
-            this.container.y += delta * this.speed
+        this.container.y += delta * this.speed
     }
     constructor(private readonly rows: number) {
         super()
