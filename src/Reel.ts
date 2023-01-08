@@ -4,38 +4,38 @@ import { Ticker } from 'pixi.js'
 import { app } from '.'
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
-    private speed = 2
+    private speed = 3
     private symbolSize = 50
     private running = false
     private stopping: boolean
     private yOffset: number
     private i: number
+    private queue: Array<number> = []
     private funct = (delta: number) => {
 
         if (this.container.y + delta * this.speed > this.i + this.symbolSize) {
-            /* this.i += this.symbolSize */
-            this.container.y -= this.symbolSize-delta*this.speed
-            this.container.children.forEach((child) => child.y += this.symbolSize)
+            let symbol: number
+            this.container.y -= this.symbolSize/* -delta*this.speed */
+            this.container.children.forEach((child) => child.y += this.symbolSize + delta * this.speed)
             this.container.children[0].destroy()
-            this.createSymbols()
-            if (this.stopping && Math.floor(this.container.children[0].y) === this.yOffset - this.symbolSize) {
+            if (this.queue) {
+                symbol = this.queue.pop()
+                this.createSymbols(1, symbol)
+            }
+            else {
+
+                this.createSymbols()
+            }
+            if (this.stopping && this.container.children[0].y >= this.yOffset - this.symbolSize + delta * this.speed && symbol == undefined && this.queue.length === 0) {
                 this.running = false
                 this.stopping = false
                 PIXI.Ticker.shared.remove(this.funct)
             }
-
         }
         else {
-/*             if (this.stopping && (this.container.y) >= this.yOffset - this.symbolSize) {
-                this.running = false
-                this.stopping = false
-                PIXI.Ticker.shared.remove(this.funct)
-            } */
             this.container.y += delta * this.speed
 
         }
-
-
     }
     constructor(private readonly rows: number) {
         super()
@@ -45,7 +45,6 @@ export class Reel extends PIXI.Container {
         this.createMask()
         this.createSymbols(rows + 1)
         this.yOffset = (this.symbolSize * rows)
-        /* const yOffset = (app.screen.height - this.container.children[0].y - this.symbolSize) */
     }
     start() {
         if (this.running) {
@@ -56,12 +55,19 @@ export class Reel extends PIXI.Container {
         this.stopping = false
     }
 
-    async stop(child: object) {
-        /* if (this.container.children[0].y == this.yoffset - this.symbolSize) { */
-        /*  PIXI.Ticker.shared.stop() */
+    async stop(id?: Array<number>) {
+        if (id) {
+            if(id.length===icons.length){
+            if(id.every(elem=>elem>=0&&elem<icons.length)){
+                this.queue = id
+            }
+            else{
+                throw 'Non valid array'
+            }
+        }
+        }
         this.stopping = true
-        /* this.running = false
-        PIXI.Ticker.shared.remove(this.funct) */
+
 
     }
     private getSprite(id = Math.floor(Math.random() * icons.length)) {
@@ -69,17 +75,20 @@ export class Reel extends PIXI.Container {
         sprite.anchor.set(0.5)
         return sprite
     }
-    private createMask(offset = 15) {
+    private createMask() {
         const mask = new PIXI.Graphics()
         mask.beginFill(0, 0)
         mask.drawRect(-this.symbolSize / 2, -this.symbolSize * this.rows / 2, this.symbolSize, this.symbolSize * this.rows)
-        this.container.mask = mask
+        this.container.mask = mask 
         this.addChild(mask)
 
     }
-    private createSymbols(amount = 1) {
+    private createSymbols(amount = 1, id?: number) {
+        /*         if (id = undefined) {
+                    id = Math.floor(Math.random() * icons.length)
+                } */
         while (amount--) {
-            const sprite = this.container.addChild(this.getSprite())
+            const sprite = this.container.addChild(this.getSprite(id))
             sprite.y = (amount - 1) * this.symbolSize
         }
     }

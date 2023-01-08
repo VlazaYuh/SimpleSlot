@@ -3,6 +3,9 @@ import { Reel } from './Reel'
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, /* backgroundColor: 1099 */ })
 document.body.appendChild(app.view)
 function init() {
+    let sex:Array<number>=[0,1,2,3,4]
+
+    
     const reel = window.reel = app.stage.addChild(new Reel(5))
     reel.position.set(app.screen.width / 2, app.screen.height / 2)
     const button = new PIXI.Graphics()
@@ -20,7 +23,7 @@ function init() {
     button2.interactive = true
     button2.cursor = 'pointer'
     button2.addListener('pointerdown', () => {
-        reel.stop()
+        reel.stop(sex)
     })
     app.stage.addChild(button2)
 }
