@@ -40,11 +40,11 @@ export class Reel extends PIXI.Container {
         this.running = true
         this.stopping = false
     }
-    async stop(id?: Array<number>) {
-        if (id) {
-            if (id.length === icons.length) {
-                if (id.every(elem => elem >= 0 && elem < icons.length)) {
-                    this.queue = id
+    async stop(queue?: Array<number>) {
+        if (queue) {
+            if (queue.length === icons.length) {
+                if (queue.every(elem => elem >= 0 && elem < icons.length)) {
+                    this.queue = queue
                     this.queue.unshift(Math.floor(Math.random() * icons.length))
                 }
                 else {
