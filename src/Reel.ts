@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { icons } from './icons'
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
-    private speed = 3
+    private speed = 5
     private symbolSize = 50
     private running = false
     private stopping: boolean
@@ -10,27 +10,18 @@ export class Reel extends PIXI.Container {
     private containerOffset: number
     private queue: Array<number> = []
     private moveContainer = (delta: number) => {
-        if (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
-            let symbol: number
+        while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
             this.container.y -= this.symbolSize - delta * this.speed
             this.container.children.forEach((child) => child.y += this.symbolSize /* + delta * this.speed */)
             this.container.children[0].destroy()
-            if (this.queue) {
-                symbol = this.queue.pop()
-                this.createSymbols(1, symbol)
-            }
-            else {
-                this.createSymbols()
-            }
-            if (this.stopping && this.container.children[0].y >= this.yOffset - this.symbolSize && symbol == undefined && this.queue.length === 0) {
+            this.createSymbols()
+            if (this.stopping && this.container.children[0].y >= this.yOffset - this.symbolSize && this.queue.length === 0) {
                 this.running = false
                 this.stopping = false
                 PIXI.Ticker.shared.remove(this.moveContainer)
             }
         }
-        else {
             this.container.y += delta * this.speed
-        }
     }
     constructor(private readonly rows: number) {
         super()
@@ -54,6 +45,7 @@ export class Reel extends PIXI.Container {
             if (id.length === icons.length) {
                 if (id.every(elem => elem >= 0 && elem < icons.length)) {
                     this.queue = id
+                    this.queue.unshift(Math.floor(Math.random() * icons.length))
                 }
                 else {
                     throw 'Non valid array'
@@ -74,9 +66,9 @@ export class Reel extends PIXI.Container {
         this.container.mask = mask
         this.addChild(mask)
     }
-    private createSymbols(amount = 1, id?: number) {
+    private createSymbols(amount = 1,) {
         while (amount--) {
-            const sprite = this.container.addChild(this.getSprite(id))
+            const sprite = this.container.addChild(this.getSprite(this.queue.pop()))
             sprite.y = (amount - 1) * this.symbolSize
         }
     }
