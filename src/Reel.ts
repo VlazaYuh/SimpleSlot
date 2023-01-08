@@ -3,7 +3,7 @@ import { icons } from './icons'
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
     private speed = 5
-    private symbolSize = 50
+    private symbolSize: number
     private running = false
     private stopping: boolean
     private yOffset: number
@@ -15,21 +15,20 @@ export class Reel extends PIXI.Container {
             this.container.children.forEach((child) => child.y += this.symbolSize /* + delta * this.speed */)
             this.container.children[0].destroy()
             this.createSymbols()
-            if (this.queue.length === 0) {
-                this.container.y = this.containerOffset
-                return
-            }
-            if (this.stopping && this.container.children[0].y === this.yOffset - this.symbolSize && this.queue.length === 0) {
+            if (this.stopping && this.queue.length === 0) {
                 this.running = false
                 this.stopping = false
                 PIXI.Ticker.shared.remove(this.moveContainer)
+                this.container.y = this.containerOffset
+                return
             }
         }
         this.container.y += delta * this.speed
     }
-    constructor(private readonly rows: number) {
+    constructor(private readonly rows: number, symbolsize: number) {
         super()
         /* this.addChild(new PIXI.Graphics().beginFill(0xffffff).drawCircle(0,0,5))  */
+        this.symbolSize = symbolsize
         this.container.y = -this.symbolSize * (rows - 1) / 2
         this.containerOffset = this.container.y
         this.createMask()
@@ -44,7 +43,10 @@ export class Reel extends PIXI.Container {
         this.running = true
         this.stopping = false
     }
-    async stop(queue?: Array<number>) {
+    stop(queue?: Array<number>) {
+        if(this.stopping){
+            return
+        }
         if (queue) {
             if (queue.length === icons.length) {
                 if (queue.every(elem => elem >= 0 && elem < icons.length)) {
