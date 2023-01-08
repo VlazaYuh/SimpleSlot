@@ -11,10 +11,14 @@ export class Reel extends PIXI.Container {
     private queue: Array<number> = []
     private moveContainer = (delta: number) => {
         while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
-            this.container.y -= this.symbolSize - delta * this.speed
+            this.container.y -= this.symbolSize
             this.container.children.forEach((child) => child.y += this.symbolSize /* + delta * this.speed */)
             this.container.children[0].destroy()
             this.createSymbols()
+            if (this.queue.length === 0) {
+                this.container.y = this.containerOffset
+                return
+            }
             if (this.stopping && this.container.children[0].y === this.yOffset - this.symbolSize && this.queue.length === 0) {
                 this.running = false
                 this.stopping = false
