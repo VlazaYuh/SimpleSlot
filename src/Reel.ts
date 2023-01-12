@@ -14,7 +14,7 @@ export class Reel extends PIXI.Container {
     private queue: Array<number> = []
     private animation = async () => {
         await gsap.to(this.container, {
-            y: -50, ease: CustomEase.create
+            y: -this.symbolSize, ease: CustomEase.create
                 ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: 0.5
         })
         this.container.children.forEach((child) => child.y += this.symbolSize)
