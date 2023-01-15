@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js'
 import { icons } from './icons'
 import { gsap } from 'gsap'
 import { CustomEase } from "gsap/CustomEase"
+import { Sprite } from 'pixi.js'
+import { Symbol } from './Symbol'
 gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
@@ -20,7 +22,7 @@ export class Reel extends PIXI.Container {
         this.container.children.forEach((child) => child.y += this.symbolSize)
         this.container.y = this.containerOffset
         this.container.children[0].destroy()
-        this.createSymbols() 
+        this.createSymbols()
 
     }
     private moveContainer = (delta: number) => {
@@ -89,8 +91,25 @@ export class Reel extends PIXI.Container {
     }
     private createSymbols(amount = 1,) {
         while (amount--) {
-            const sprite = this.container.addChild(this.getSprite(this.queue.pop()))
+            const sprite = this.container.addChild(new Symbol(this.queue.pop()))/*  = this.container.addChild(this.getSprite(this.queue.pop())) */
             sprite.y = (amount - 1) * this.symbolSize
+        }
+    }
+    checkForWin() {
+
+        return (this.container.children[(this.rows - 1) / 2] as Symbol).texture.textureCacheIds[0]
+    }
+    winOrLose(TrueOrFalse: boolean) {
+        if (TrueOrFalse) {
+            for (let i = 0; i < this.rows; i++) {
+                if (i !== (this.rows - 1) / 2) {
+                    (this.container.children[i] as Symbol).animate(false)
+                } else {
+                    (this.container.children[i] as Symbol).animate(true)
+                }
+            }
+        } else {
+            this.container.children.forEach(element => (element as Symbol).animate(false))
         }
     }
 }

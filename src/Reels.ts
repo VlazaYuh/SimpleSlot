@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { Reel } from './Reel'
 import { delay } from '.'
+import { Symbol } from './Symbol'
 export class Reels extends PIXI.Container {
     private symbolSize = 50
     private rows = 5
@@ -14,9 +15,6 @@ export class Reels extends PIXI.Container {
         }
     }
     start() {
-/*         if (this.reelsContainer.children.every(element=>{(element as Reel).running===false})) {
-        
-        } */
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
     }
     async stop(reelsPosition: number[][]) {
@@ -24,5 +22,16 @@ export class Reels extends PIXI.Container {
             (reel as Reel).stop(reelsPosition.shift())
             await delay(200)
         }
+    }
+    checkForWin() {
+        let symbolsArray:string[]=[]
+        this.reelsContainer.children.forEach(reel => { symbolsArray.push((reel as Reel).checkForWin()) })
+        /* console.log(symbolsArray) */
+        if(symbolsArray.every(symbol=>symbol===symbolsArray[0])){
+            this.reelsContainer.children.forEach(element=>(element as Reel).winOrLose(true))
+        }else{
+            this.reelsContainer.children.forEach(element=>(element as Reel).winOrLose(false))
+        }
+        
     }
 }
