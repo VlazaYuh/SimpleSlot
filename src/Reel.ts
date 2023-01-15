@@ -23,6 +23,7 @@ export class Reel extends PIXI.Container {
         this.container.y = this.containerOffset
         this.container.children[0].destroy()
         this.createSymbols()
+        
 
     }
     private moveContainer = (delta: number) => {

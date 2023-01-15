@@ -22,6 +22,8 @@ export class Reels extends PIXI.Container {
             (reel as Reel).stop(reelsPosition.shift())
             await delay(200)
         }
+        await delay(200*(this.rows+1))
+        this.checkForWin()
     }
     checkForWin() {
         let symbolsArray:string[]=[]
