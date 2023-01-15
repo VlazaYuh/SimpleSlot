@@ -18,22 +18,22 @@ export class Reels extends PIXI.Container {
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
     }
     async stop(reelsPosition: number[][]) {
+        let promiseArray: Array<Promise<void>> = []
         for (const reel of this.reelsContainer.children) {
-            (reel as Reel).stop(reelsPosition.shift())
+            promiseArray.push((reel as Reel).stop(reelsPosition.shift()))
             await delay(200)
         }
-        await delay(200*(this.rows+1))
+        await Promise.all(promiseArray)
         this.checkForWin()
     }
     checkForWin() {
-        let symbolsArray:string[]=[]
+        let symbolsArray: string[] = []
         this.reelsContainer.children.forEach(reel => { symbolsArray.push((reel as Reel).checkForWin()) })
-        /* console.log(symbolsArray) */
-        if(symbolsArray.every(symbol=>symbol===symbolsArray[0])){
-            this.reelsContainer.children.forEach(element=>(element as Reel).winOrLose(true))
-        }else{
-            this.reelsContainer.children.forEach(element=>(element as Reel).winOrLose(false))
+        if (symbolsArray.every(symbol => symbol === symbolsArray[0])) {
+            this.reelsContainer.children.forEach(element => (element as Reel).symbolAnimate(true))
+        } else {
+            this.reelsContainer.children.forEach(element => (element as Reel).symbolAnimate(false))
         }
-        
+
     }
 }

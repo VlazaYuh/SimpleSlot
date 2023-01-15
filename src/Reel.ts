@@ -14,6 +14,7 @@ export class Reel extends PIXI.Container {
     private yOffset: number
     private containerOffset: number
     private queue: Array<number> = []
+    private stopResolve
     private animation = async () => {
         await gsap.to(this.container, {
             y: -this.symbolSize, ease: CustomEase.create
@@ -23,8 +24,7 @@ export class Reel extends PIXI.Container {
         this.container.y = this.containerOffset
         this.container.children[0].destroy()
         this.createSymbols()
-        
-
+        this.stopResolve()
     }
     private moveContainer = (delta: number) => {
         while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
@@ -62,21 +62,24 @@ export class Reel extends PIXI.Container {
         this.stopping = false
     }
     stop(queue?: Array<number>) {
-        if (this.stopping) {
-            return
-        }
-        if (queue) {
-            if (queue.length === icons.length) {
-                if (queue.every(elem => elem >= 0 && elem < icons.length)) {
-                    this.queue = queue
-                    this.queue.unshift(Math.floor(Math.random() * icons.length))
-                }
-                else {
-                    throw 'Non valid array'
+        return new Promise<void>(resolve => {
+            if (this.stopping) {
+                return
+            }
+            if (queue) {
+                if (queue.length === icons.length) {
+                    if (queue.every(elem => elem >= 0 && elem < icons.length)) {
+                        this.queue = queue
+                        this.queue.unshift(Math.floor(Math.random() * icons.length))
+                        this.stopResolve = resolve
+                    }
+                    else {
+                        throw 'Non valid array'
+                    }
                 }
             }
-        }
-        this.stopping = true
+            this.stopping = true
+        })
     }
     private getSprite(id = Math.floor(Math.random() * icons.length)) {
         const sprite = PIXI.Sprite.from(icons[id])
@@ -97,20 +100,19 @@ export class Reel extends PIXI.Container {
         }
     }
     checkForWin() {
-
         return (this.container.children[(this.rows - 1) / 2] as Symbol).texture.textureCacheIds[0]
     }
-    winOrLose(TrueOrFalse: boolean) {
-        if (TrueOrFalse) {
+    symbolAnimate(winOrLose: boolean) {
+        if (winOrLose) {
             for (let i = 0; i < this.rows; i++) {
                 if (i !== (this.rows - 1) / 2) {
-                    (this.container.children[i] as Symbol).animate(false)
+                    (this.container.children[i] as Symbol).animate('lose')
                 } else {
-                    (this.container.children[i] as Symbol).animate(true)
+                    (this.container.children[i] as Symbol).animate('win')
                 }
             }
         } else {
-            this.container.children.forEach(element => (element as Symbol).animate(false))
+            this.container.children.forEach(element => (element as Symbol).animate('lose'))
         }
     }
 }
