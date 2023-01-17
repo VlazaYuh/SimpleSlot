@@ -1,32 +1,39 @@
 import * as PIXI from 'pixi.js'
 import { Reel } from './Reel'
 import { Reels } from './Reels'
+import { StateMachine } from './StateMachine'
+import { State } from './State'
+import { UserController } from './Controllers/UserController'
+import { UI } from './UI'
+import { ReelController } from './Controllers/ReelController'
+import { TTransition } from './TTransition'
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, /* backgroundColor: 1099 */ })
 document.body.appendChild(app.view)
+export const stateMachine = new StateMachine()
+stateMachine.setConfig({
+    transitions: [{ from: State.Init, to: State.Idle },
+    { from: State.Idle, to: State.Spinning },
+    { from: State.Spinning, to: State.Idle }],
+    initialState: State.Init
+})
+export const ui = app.stage.addChild(new UI())
+new UserController()
 function init() {
     const reels = window.reels = app.stage.addChild(new Reels(5))
+    ui.init(app.screen.width)
+    const reelController = new ReelController(reels)
     reels.position.set(app.screen.width / 2, app.screen.height / 2)
-    const button = new PIXI.Graphics()
-    button.beginFill(0x660000, 1)
-    button.drawRect(app.screen.width / 2 + 100 - 50, 50 * 5 * 2, 50, 20)
-    button.interactive = true
-    button.cursor = 'pointer'
-    button.addListener('pointerdown', () => {
-        reels.start()
-    })
-    app.stage.addChild(button)
-    const button2 = new PIXI.Graphics()
-    button2.beginFill(0x660000, 1)
-    button2.drawRect(app.screen.width / 2 - 100, 50 * 5 * 2, 50, 20)
-    button2.interactive = true
-    button2.cursor = 'pointer'
-    button2.addListener('pointerdown', () => {
-        reels.stop([[0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4], [0, 1, 2, 3, 4]])
-    })
-    app.stage.addChild(button2)
+    stateMachine.start()
 }
 PIXI.Loader.shared.add('assets/fruits.json')
 PIXI.Loader.shared.load(init)
+
+stateMachine.onStateChange(state => {
+    return new Promise(resolve => {
+        resolve()
+        return
+    })
+})
 export function delay(timeMS: number) {
     return new Promise<void>(resolve => {
         PIXI.Ticker.shared.add(() => {
