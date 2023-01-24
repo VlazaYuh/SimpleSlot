@@ -69,7 +69,7 @@ export class Reel extends PIXI.Container {
             if (queue) {
                 if (queue.length === icons.length) {
                     if (queue.every(elem => elem >= 0 && elem < icons.length)) {
-                        this.queue = queue
+                        this.queue = [...queue]
                         this.queue.unshift(Math.floor(Math.random() * icons.length))
                         this.stopResolve = resolve
                     }
@@ -99,8 +99,11 @@ export class Reel extends PIXI.Container {
             sprite.y = (amount - 1) * this.symbolSize
         }
     }
-    checkForWin() {
+    getSymbol() {
         return (this.container.children[(this.rows - 1) / 2] as Symbol).texture.textureCacheIds[0]
+    }
+    getSymbol1(position:number) {
+        return (this.container.children[position] as Symbol)
     }
     symbolAnimate(winOrLose: boolean) {
         if (winOrLose) {

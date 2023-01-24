@@ -10,6 +10,7 @@ export class Symbol extends PIXI.Sprite {
     }
     async animate(animationName: string) {
         if (animationName === 'win') {
+            this.tint = 0xFFFFFF
             await gsap.fromTo(this, { rotation: -Math.PI * 6 }, { rotation: 0, duration: 2, x: this.x })
         }
         if (animationName === 'lose') {

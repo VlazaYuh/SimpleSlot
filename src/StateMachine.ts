@@ -17,18 +17,19 @@ export class StateMachine {
         this.callbacks.push(callback)
     }
     async start() {
+        if (this._currentState !== undefined) {
+            throw 'start has already been used'
+        }
         this._currentState = this.initialState
         while (true) {
             await Promise.all(this.callbacks.map(callback => callback(this.currentState)))
             this.changeState()
-            
         }
     }
     private changeState() {
         const { to } = this.transitions.find(transition => transition.from === this.currentState)
-        const newState= typeof to === 'function' ? to() : to
+        const newState = typeof to === 'function' ? to() : to
         console.log(`State Changed from ${State[this.currentState]} to ${State[newState]}`)
         this._currentState = newState
-        
     }
 }
