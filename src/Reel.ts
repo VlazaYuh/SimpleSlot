@@ -102,7 +102,7 @@ export class Reel extends PIXI.Container {
     getSymbol() {
         return (this.container.children[(this.rows - 1) / 2] as Symbol).texture.textureCacheIds[0]
     }
-    getSymbol1(position:number) {
+    getSymbol1(position: number) {
         return (this.container.children[position] as Symbol)
     }
     symbolAnimate(winOrLose: boolean) {
