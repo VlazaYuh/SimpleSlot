@@ -36,7 +36,7 @@ stateMachine.onStateChange(state => {
 })
 stateMachine.start()
 export function init() {
-    const reels = window.reels = app.stage.addChild(new Reels(5))
+    const reels = window.reels = app.stage.addChild(new Reels(5,5))
     ui.init(app.screen.width)
     const reelController = new ReelController(reels)
     const animationController = new AnimationController(reels)

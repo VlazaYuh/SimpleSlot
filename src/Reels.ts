@@ -4,18 +4,24 @@ import { delay } from '.'
 import { Symbol } from './Symbol'
 export class Reels extends PIXI.Container {
     private symbolSize = 50
-    private _rows = 5
+    private _rows: number
+    private _columns: number
     private reelsContainer = this.addChild(new PIXI.Container())
-    constructor(numberOfReels: number) {
+    constructor(numberOfRows: number, numberOfReels: number) {
         super()
-        this.reelsContainer.x = -this.symbolSize * (numberOfReels - 1) / 2
+        this._rows = numberOfRows
+        this._columns = numberOfReels
+        this.reelsContainer.x = -this.symbolSize * (this._columns - 1) / 2
         for (let i = 0; i < numberOfReels; i++) {
             let reel = this.reelsContainer.addChild(new Reel(this._rows, this.symbolSize))
             reel.x = i * this.symbolSize
         }
     }
-    get rows(){
+    get rows() {
         return this._rows
+    }
+    get columns(){
+        return this._columns
     }
     start() {
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
@@ -29,10 +35,7 @@ export class Reels extends PIXI.Container {
         await Promise.all(promiseArray)
         /* this.checkForWin() */
     }
-    allSymbolsTint() {
-        this.reelsContainer.children.forEach(element => (element as Reel).symbolAnimate(false))
-    }
-    getSymbol(row: number, position: number) {
-        return (this.reelsContainer.children[row] as Reel).getSymbol1(position)
+    getSymbol(position: number, line: number) {
+        return (this.reelsContainer.children[position] as Reel).getSymbol(line)
     }
 }

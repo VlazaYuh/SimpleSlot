@@ -99,23 +99,7 @@ export class Reel extends PIXI.Container {
             sprite.y = (amount - 1) * this.symbolSize
         }
     }
-    getSymbol() {
-        return (this.container.children[(this.rows - 1) / 2] as Symbol).texture.textureCacheIds[0]
-    }
-    getSymbol1(position: number) {
-        return (this.container.children[position] as Symbol)
-    }
-    symbolAnimate(winOrLose: boolean) {
-        if (winOrLose) {
-            for (let i = 0; i < this.rows; i++) {
-                if (i !== (this.rows - 1) / 2) {
-                    (this.container.children[i] as Symbol).animate('lose')
-                } else {
-                    (this.container.children[i] as Symbol).animate('win')
-                }
-            }
-        } else {
-            this.container.children.forEach(element => (element as Symbol).animate('lose'))
-        }
+    getSymbol(position: number) {
+        return (this.container.children[this.rows-position] as Symbol)
     }
 }
