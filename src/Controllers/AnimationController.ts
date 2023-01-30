@@ -8,20 +8,15 @@ export class AnimationController extends Controller {
         super()
         this.reels = reels
     }
-    protected stateChangeCallback(state: State): void {
+    protected async stateChangeCallback(state: State): Promise<void> {
         if (state === State.Animation) {
-            const spinResult = getSpinResult()
             const promiseArray: Promise<void>[] = []
             for (let column = 0; column < this.reels.columns; column++) {
                 for (let row = 1; row <= this.reels.rows; row++) {
-                   /*  this.reels.getSymbol(row,column).animate('win') */
-                     if(this.isWinSymbol(row,column)){
-                        this.reels.getSymbol(column,row).animate('win')
-                    }else{
-                        this.reels.getSymbol(column,row).animate('lose')
-                    } 
-                } 
+                    promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ?'win':'lose'))
+                }
             }
+            await Promise.all(promiseArray)
         }
         this.stateCompleted()
     }
