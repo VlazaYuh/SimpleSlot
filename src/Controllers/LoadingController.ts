@@ -8,6 +8,8 @@ export class LoadingController extends Controller {
     protected async stateChangeCallback(state: State) {
         if (state === State.Loading) {
             PIXI.Loader.shared.add('assets/fruits.json')
+            PIXI.Loader.shared.add('assets/Snow50px.png')
+            PIXI.Loader.shared.add('assets/particles.json')
             PIXI.Ticker.shared.add(this.loading)
             PIXI.Loader.shared.onComplete.add(() => this.stateCompleted())
             PIXI.Loader.shared.load()

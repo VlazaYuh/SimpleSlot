@@ -26,6 +26,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@pixi/particle-emitter": "^5.0.8",
     "gsap": "^3.11.4",
     "pixi.js": "6.2.0"
   }
