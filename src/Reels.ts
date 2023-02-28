@@ -20,7 +20,7 @@ export class Reels extends PIXI.Container {
     get rows() {
         return this._rows
     }
-    get columns(){
+    get columns() {
         return this._columns
     }
     start() {
@@ -35,7 +35,7 @@ export class Reels extends PIXI.Container {
         await Promise.all(promiseArray)
         /* this.checkForWin() */
     }
-    getSymbol(position: number, line: number) {
-        return (this.reelsContainer.children[position] as Reel).getSymbol(line)
+    getSymbol(column: number, row: number) {
+        return (this.reelsContainer.children[column] as Reel).getSymbol(row)
     }
 }

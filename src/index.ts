@@ -38,11 +38,11 @@ stateMachine.onStateChange(state => {
 stateMachine.start()
 export function init() {
     const reels = window.reels = app.stage.addChild(new Reels(5, 5))
+    reels.position.set(app.screen.width / 2, app.screen.height / 2)
     ui.init(app.screen.width)
     const reelController = new ReelController(reels)
     const linesAnim = window.linesAnim =app.stage.addChild(new Lines(reels))
     const animationController = window.animationControloler = new AnimationController(reels,linesAnim)
-    reels.position.set(app.screen.width / 2, app.screen.height / 2)
 }
 export function delay(timeMS: number) {
     return new Promise<void>(resolve => {

@@ -9,6 +9,5 @@ export function getLinesDict() {
         7: [1, 2, 3, 4, 5],
         8: [1, 2, 3, 2, 1],
         9: [5, 4, 3, 4, 5],
-        length:9
     }
 }
