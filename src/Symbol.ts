@@ -3,6 +3,7 @@ import { delay } from '.'
 import { gsap } from 'gsap'
 import { icons } from './icons'
 export class Symbol extends PIXI.Sprite {
+    private winAnimationDuration = 2
     private _id!: number
     constructor(id = Math.floor(Math.random() * icons.length)) {
         super()
@@ -11,7 +12,7 @@ export class Symbol extends PIXI.Sprite {
     async animate(animationName: string) {
         if (animationName === 'win') {
             this.tint = 0xFFFFFF
-            await gsap.fromTo(this, { rotation: -Math.PI * 6 }, { rotation: 0, duration: 2, x: this.x })
+            await gsap.fromTo(this, { rotation: -Math.PI * 8 }, { rotation: 0, duration: this.winAnimationDuration, ease: gsap.parseEase("M0,0,C0.218,-0.28,0.492,1,1,1") })
         }
         if (animationName === 'lose') {
             this.tint = 0x818181

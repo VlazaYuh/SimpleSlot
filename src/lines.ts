@@ -7,14 +7,14 @@ import { app, delay } from '.'
 import { Emitter, EmitterConfigV3, upgradeConfig } from '@pixi/particle-emitter'
 export class Lines extends PIXI.Container {
     private timeLines: { [lineId: number]: gsap.core.Timeline } = {}
-    private duration = 1
-    private drawOffset = 50
+    private duration = 0.4
+    private drawOffset = 25
     constructor(private reels: Reels) {
         super()
         this.createTimeLines()
     }
     private createTimeLines() {
-        const emitterConfig = upgradeConfig(PIXI.Loader.shared.resources["assets/particles.json"].data, PIXI.Texture.from("assets/Snow50px.png"))
+        const emitterConfig = upgradeConfig(PIXI.Loader.shared.resources["assets/particles.json"].data, PIXI.Texture.from("assets/star.png"))
         for (const lineId in getLinesDict()) {
             this.timeLines[+lineId] = this.getTimeLine(+lineId, emitterConfig)
         }
@@ -80,6 +80,7 @@ export class Lines extends PIXI.Container {
         for (const { id } of getSpinResult().win.lines) {
             this.playLine(id)
         }
+        return delay(this.duration * 1000)
     }
     playLine(id: number) {
         this.timeLines[id].restart()

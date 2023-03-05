@@ -21,13 +21,14 @@ export class AnimationController extends Controller {
     }
     protected async stateChangeCallback(state: State): Promise<void> {
         if (state === State.Animation) {
+            await this.linesAnim.playLines()
             const promiseArray: Promise<void>[] = []
             for (let column = 0; column < this.reels.columns; column++) {
                 for (let row = 1; row <= this.reels.rows; row++) {
                     promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ? 'win' : 'lose'))
                 }
             }
-            this.linesAnim.playLines()
+
             await Promise.all(promiseArray)
         }
         this.stateCompleted()
