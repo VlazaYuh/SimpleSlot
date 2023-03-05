@@ -8,6 +8,7 @@ import { Emitter, EmitterConfigV3, upgradeConfig } from '@pixi/particle-emitter'
 export class Lines extends PIXI.Container {
     private timeLines: { [lineId: number]: gsap.core.Timeline } = {}
     private duration = 1
+    private drawOffset = 50
     constructor(private reels: Reels) {
         super()
         this.createTimeLines()
@@ -25,22 +26,27 @@ export class Lines extends PIXI.Container {
         return this.reels.getSymbol(column - 1, row).getGlobalPosition()
     }
     private getLineSegments(id: number) {
-        let distance = 0
+        let distance = this.drawOffset * 2
         const line = getLinesDict()[id]
-        const segments: { duration: number; position: PIXI.Point; distance: number }[] = []
-        line.forEach((row, i) => {
+        const segments: { duration: number; position: PIXI.Point; distance: number }[] = [this.getFirstSegment(line)]
+        line.forEach((row: number, i: number) => {
             const column = i + 1
-            const position = this.getSymbolPosition(column, row);
-            const segmentDistance = i > 0 ? this.getDistance(segments[i - 1].position, position) : 0
+            const position = this.getSymbolPosition(column, row)
+            const segmentDistance = this.getDistance(segments[i].position, position)
             distance += segmentDistance
-            segments[i] = { duration: 0, position, distance: segmentDistance }
+            segments[i + 1] = { duration: 0, position, distance: segmentDistance }
         })
+        const lastSegment = segments[segments.length - 1]
+        const lastSegmentPosition = lastSegment.position.clone()
+        lastSegmentPosition.x += this.drawOffset
+        segments.push({ position: lastSegmentPosition, distance: this.getDistance(lastSegment.position, lastSegmentPosition), duration: 0 })
         segments.forEach((segment) => (segment.duration = (this.duration * segment.distance) / distance))
         return segments
     }
     private getTimeLine(lineId: number, emitterConfig: EmitterConfigV3) {
         const container = this.addChild(new PIXI.ParticleContainer(500))
         const emitter = new Emitter(container, emitterConfig)
+
         const segments = this.getLineSegments(lineId)
         const { x, y } = segments[0].position
         const fakeObject = { x, y }
@@ -61,21 +67,26 @@ export class Lines extends PIXI.Container {
             },
         })
         for (const segment of segments) {
-            const { position, duration } = segment;
+            const { position, duration } = segment
             if (duration === 0) {
                 continue
             }
             const { x, y } = position
-            timeLine.to(fakeObject, { x, y, duration });
+            timeLine.to(fakeObject, { x, y, duration })
         }
-        return timeLine;
+        return timeLine
     }
     playLines() {
         for (const { id } of getSpinResult().win.lines) {
-            this.playLine(id);
+            this.playLine(id)
         }
     }
     playLine(id: number) {
-        this.timeLines[id].restart();
+        this.timeLines[id].restart()
+    }
+    getFirstSegment(line: number[]) {
+        const position = this.getSymbolPosition(1, line[0])
+        position.x -= this.drawOffset
+        return { duration: 0, position: position, distance: 0 }
     }
 }

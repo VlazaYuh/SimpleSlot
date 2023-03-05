@@ -41,8 +41,8 @@ export function init() {
     reels.position.set(app.screen.width / 2, app.screen.height / 2)
     ui.init(app.screen.width)
     const reelController = new ReelController(reels)
-    const linesAnim = window.linesAnim =app.stage.addChild(new Lines(reels))
-    const animationController = window.animationControloler = new AnimationController(reels,linesAnim)
+    const linesAnim = window.linesAnim = app.stage.addChild(new Lines(reels))
+    const animationController = window.animationControloler = new AnimationController(reels, linesAnim)
 }
 export function delay(timeMS: number) {
     return new Promise<void>(resolve => {
