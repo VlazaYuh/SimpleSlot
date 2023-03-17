@@ -1,4 +1,4 @@
-import { delay, init, loadingGraphics, stateMachine } from ".."
+import { loadingGraphics } from ".."
 import { State } from "../State"
 import { Controller } from "./Controller"
 import * as PIXI from 'pixi.js'
@@ -9,6 +9,8 @@ export class LoadingController extends Controller {
         if (state === State.Loading) {
             PIXI.Loader.shared.add('assets/fruits.json')
             PIXI.Loader.shared.add('assets/star.png')
+            PIXI.Loader.shared.add('assets/arrow.png')
+            PIXI.Loader.shared.add('assets/startButton.png')
             PIXI.Loader.shared.add('assets/particles.json')
             PIXI.Ticker.shared.add(this.loading)
             PIXI.Loader.shared.onComplete.add(() => this.stateCompleted())

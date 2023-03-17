@@ -5,14 +5,10 @@ import { State } from "../State"
 import { getLinesDict } from "../linesDict"
 import { getSpinResult } from "../spinResult"
 import { Controller } from "./Controller"
-import { app, delay } from '..'
-import { Emitter, upgradeConfig } from '@pixi/particle-emitter'
 import { Lines } from '../Lines'
 window.gsap = gsap
 export class AnimationController extends Controller {
-    private emmiters: Array<Emitter> = []
     private reels: Reels
-    private particleContainer: PIXI.ParticleContainer
     private linesAnim: Lines
     constructor(reels: Reels, lineAnim: Lines) {
         super()

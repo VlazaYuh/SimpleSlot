@@ -1,4 +1,4 @@
-import { delay, stateMachine } from ".."
+import { delay } from ".."
 import { Reels } from "../Reels"
 import { State } from "../State"
 import { getSpinResult } from "../spinResult"

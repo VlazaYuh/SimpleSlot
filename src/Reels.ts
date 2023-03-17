@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js'
 import { Reel } from './Reel'
 import { delay } from '.'
-import { Symbol } from './Symbol'
 export class Reels extends PIXI.Container {
     private symbolSize = 50
     private _rows: number

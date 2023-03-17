@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js'
 import { icons } from './icons'
 import { gsap } from 'gsap'
 import { CustomEase } from "gsap/CustomEase"
-import { Sprite } from 'pixi.js'
 import { Symbol } from './Symbol'
 gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
@@ -100,6 +99,6 @@ export class Reel extends PIXI.Container {
         }
     }
     getSymbol(position: number) {
-        return (this.container.children[this.rows-position] as Symbol)
+        return (this.container.children[this.rows - position] as Symbol)
     }
 }

@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 import { Reels } from "./Reels"
 import { getLinesDict } from "./linesDict"
 import { getSpinResult } from "./spinResult"
-import { app, delay } from '.'
+import { delay } from '.'
 import { Emitter, EmitterConfigV3, upgradeConfig } from '@pixi/particle-emitter'
 export class Lines extends PIXI.Container {
     private timeLines: { [lineId: number]: gsap.core.Timeline } = {}

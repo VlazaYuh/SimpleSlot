@@ -12,7 +12,7 @@ import { Lines } from './Lines'
 window.PIXI = PIXI
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, /* backgroundColor: 1099 */ })
 document.body.appendChild(app.view)
-
+export const eventEmitter = new PIXI.utils.EventEmitter()
 export const stateMachine = new StateMachine()
 stateMachine.setConfig({
     transitions: [
