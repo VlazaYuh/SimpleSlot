@@ -5,8 +5,8 @@ import { Controller } from "./Controller"
 export class UserController extends Controller {
     constructor() {
         super()
-        eventEmitter.on(Event[1], () => this.stateCompleted?.())
-        eventEmitter.on(Event[0], (stakeIndex: number) => { console.log(stakeIndex) })
+        eventEmitter.on(Event.playerPressedStart, () => this.stateCompleted?.())
+        eventEmitter.on(Event.stakeChanged, (stakeIndex: number) => { console.log(stakeIndex) })
     }
     protected stateChangeCallback(state: State): void {
         if (state !== State.Idle) {
