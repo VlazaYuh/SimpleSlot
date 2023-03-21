@@ -2,8 +2,9 @@ import * as PIXI from 'pixi.js'
 import { eventEmitter, stateMachine } from '.'
 import { State } from './State'
 import { stakeDict } from './stakeDict'
-import { style } from './textStyles'
+import { styles } from './textStyles'
 import { StakeButton } from './StakeButton'
+import { Event } from './Event'
 export class StakeChanger extends PIXI.Container {
     private stakeUp: StakeButton
     private stakeDown: StakeButton
@@ -12,18 +13,18 @@ export class StakeChanger extends PIXI.Container {
     constructor() {
         super()
         this.stakeUp = this.addChild(new StakeButton())
-        this.stakeUp.x = - 20
+        this.stakeUp.pivot.x = -40
         this.stakeDown = this.addChild(new StakeButton())
-        this.stakeDown.x = - 20
-        this.stakeDown.pivot.set(-100, 0)
+        this.stakeDown.pivot.x = -40
         this.stakeDown.rotation = Math.PI
-        this.stakeText = this.addChild(new PIXI.Text(`${stakeDict[0]}`, style))
+        this.stakeText = this.addChild(new PIXI.Text(`${stakeDict[0]}`, styles.stakeStyle))
         this.stakeText.anchor.set(0.5)
-        this.stakeText.x = -70
         stateMachine.onStateChange(async state => {
             this.stakeUp.disabled = state !== State.Idle
             this.stakeDown.disabled = state !== State.Idle
-            this.checkDisable()
+            if (state === State.Idle) {
+                this.checkMinMax()
+            }
         })
         this.stakeUp.on('pointerup', () => {
             this.changeStakeBy(1)
@@ -34,18 +35,20 @@ export class StakeChanger extends PIXI.Container {
     }
     private changeStakeBy(value: number) {
         this.stakeIndex += value
-        eventEmitter.emit(`stake_changed`, this.stakeIndex)
+        eventEmitter.emit(Event.stakeChanged, this.stakeIndex)
         this.stakeText.text = `${stakeDict[this.stakeIndex]}`
-        this.stakeDown.disabled = false
-        this.stakeUp.disabled = false
-        this.checkDisable()
+        this.checkMinMax()
     }
-    private checkDisable() {
+    private checkMinMax() {
         if (this.stakeIndex === 0) {
             this.stakeDown.disabled = true
+        } else {
+            this.stakeDown.disabled = false
         }
         if (this.stakeIndex === stakeDict.length - 1) {
             this.stakeUp.disabled = true
+        } else {
+            this.stakeUp.disabled = false
         }
     }
 }
