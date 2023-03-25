@@ -13,17 +13,16 @@ export class StakeChanger extends PIXI.Container {
     constructor() {
         super()
         this.stakeUp = this.addChild(new StakeButton())
-        this.stakeUp.pivot.x = -40
         this.stakeDown = this.addChild(new StakeButton())
-        this.stakeDown.pivot.x = -40
+        this.stakeDown.pivot.x = this.stakeUp.pivot.x = -40
         this.stakeDown.rotation = Math.PI
         this.stakeText = this.addChild(new PIXI.Text(`${stakeDict[0]}`, styles.stakeStyle))
         this.stakeText.anchor.set(0.5)
         stateMachine.onStateChange(async state => {
-            this.stakeUp.disabled = state !== State.Idle
-            this.stakeDown.disabled = state !== State.Idle
             if (state === State.Idle) {
                 this.checkMinMax()
+            } else {
+                this.stakeDown.disabled = this.stakeUp.disabled = true
             }
         })
         this.stakeUp.on('pointerup', () => {
@@ -35,20 +34,12 @@ export class StakeChanger extends PIXI.Container {
     }
     private changeStakeBy(value: number) {
         this.stakeIndex += value
-        eventEmitter.emit(Event.stakeChanged, this.stakeIndex)
+        eventEmitter.emit(Event.StakeChanged, this.stakeIndex)
         this.stakeText.text = `${stakeDict[this.stakeIndex]}`
         this.checkMinMax()
     }
     private checkMinMax() {
-        if (this.stakeIndex === 0) {
-            this.stakeDown.disabled = true
-        } else {
-            this.stakeDown.disabled = false
-        }
-        if (this.stakeIndex === stakeDict.length - 1) {
-            this.stakeUp.disabled = true
-        } else {
-            this.stakeUp.disabled = false
-        }
+        this.stakeDown.disabled = !this.stakeIndex
+        this.stakeUp.disabled = this.stakeIndex === stakeDict.length - 1
     }
 }

@@ -1,4 +1,4 @@
 export enum Event {
-    stakeChanged = 'stake_changed',
-    playerPressedStart = 'player_pressed_start'
+    StakeChanged = 'stake_changed',
+    PlayerPressedStart = 'player_pressed_start'
 }

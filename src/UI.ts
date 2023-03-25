@@ -17,7 +17,7 @@ export class UI extends PIXI.Container {
         this.stakeContainer = this.addChild(new StakeChanger())
         this.stakeContainer.position.set(width / 2 - 100, 510)
         this.buttonStart.on('pointerup', () => {
-            eventEmitter.emit(Event.playerPressedStart)
+            eventEmitter.emit(Event.PlayerPressedStart)
         })
         stateMachine.onStateChange(async state => {
             this.buttonStart.disabled = state !== State.Idle
