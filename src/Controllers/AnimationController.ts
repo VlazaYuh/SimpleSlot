@@ -27,7 +27,11 @@ export class AnimationController extends Controller {
                     promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ? 'win' : 'lose'))
                 }
             }
-            this.bigWinAnim.animate()
+            let spinResultWinSum = getSpinResult().win.sum
+            let winString = spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : spinResultWinSum >= 30 ? 'big' : 'notAWin'
+            if (winString !== 'notAWin') {
+                this.bigWinAnim.animate(winString, getSpinResult().win.sum)
+            }
             await Promise.all(promiseArray)
         }
 
