@@ -7,6 +7,7 @@ import { getSpinResult } from "../spinResult"
 import { Controller } from "./Controller"
 import { Lines } from '../Lines'
 import { BigWinAnimation } from '../BigWinAnimation'
+
 window.gsap = gsap
 export class AnimationController extends Controller {
     private reels: Reels
@@ -27,12 +28,11 @@ export class AnimationController extends Controller {
                     promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ? 'win' : 'lose'))
                 }
             }
-            let spinResultWinSum = getSpinResult().win.sum
-            let winString = spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : spinResultWinSum >= 30 ? 'big' : 'notAWin'
-            if (winString !== 'notAWin') {
-                this.bigWinAnim.animate(winString, getSpinResult().win.sum)
-            }
+            const spinResultWinSum = getSpinResult().win.sum
             await Promise.all(promiseArray)
+            if (spinResultWinSum >= 30) {
+                await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum)
+            }
         }
 
         this.stateCompleted()

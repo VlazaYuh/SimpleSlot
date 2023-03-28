@@ -2,7 +2,6 @@ import * as PIXI from 'pixi.js'
 import { gsap } from 'gsap'
 import { delay } from '.'
 import { styles } from './textStyles'
-import { getSpinResult } from './spinResult'
 
 export class BigWinAnimation extends PIXI.Container {
     private timeline: gsap.core.Timeline
@@ -19,8 +18,8 @@ export class BigWinAnimation extends PIXI.Container {
         this.stakeText.anchor.set(0.5)
         this.visible = false
     }
-    async animate(win: string, sum: number) {
-        win === 'big' ? this.text.text = 'Big Win' : win === 'mega' ? this.text.text = 'Mega Win' : win === 'super' ? this.text.text = 'Super Win' : {}
+    async animate(win: 'big' | 'super' | 'mega', sum: number) {
+        this.text.text = win === 'big' ? 'Big Win' : win === 'mega' ? 'Mega Win' : 'Super Win'
         this.stakeText.text = `${sum}`
         this.visible = true
         this.createTimeline()
