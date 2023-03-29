@@ -6,14 +6,18 @@ import { getLinesDict } from "../linesDict"
 import { getSpinResult } from "../spinResult"
 import { Controller } from "./Controller"
 import { Lines } from '../Lines'
+import { BigWinAnimation } from '../BigWinAnimation'
+
 window.gsap = gsap
 export class AnimationController extends Controller {
     private reels: Reels
     private linesAnim: Lines
-    constructor(reels: Reels, lineAnim: Lines) {
+    private bigWinAnim: BigWinAnimation
+    constructor(reels: Reels, lineAnim: Lines, bigWinAnim: BigWinAnimation) {
         super()
         this.reels = reels
         this.linesAnim = lineAnim
+        this.bigWinAnim = bigWinAnim
     }
     protected async stateChangeCallback(state: State): Promise<void> {
         if (state === State.Animation) {
@@ -24,7 +28,11 @@ export class AnimationController extends Controller {
                     promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ? 'win' : 'lose'))
                 }
             }
-
+            const spinResultWinSum = getSpinResult().win.sum
+            await Promise.all(promiseArray)
+            if (spinResultWinSum >= 30) {
+                await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum)
+            }
             await Promise.all(promiseArray)
         }
         this.stateCompleted()

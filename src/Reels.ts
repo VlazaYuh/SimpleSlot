@@ -1,11 +1,15 @@
 import * as PIXI from 'pixi.js'
 import { Reel } from './Reel'
 import { delay } from '.'
+import { SoundManager } from './SoundManager'
+import { Sounds } from './Sounds'
+import { Howl } from 'howler'
 export class Reels extends PIXI.Container {
     private symbolSize = 50
     private _rows: number
     private _columns: number
     private reelsContainer = this.addChild(new PIXI.Container())
+    private reelsSpinSound: Howl
     constructor(numberOfRows: number, numberOfReels: number) {
         super()
         this._rows = numberOfRows
@@ -24,6 +28,7 @@ export class Reels extends PIXI.Container {
     }
     start() {
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
+        this.reelsSpinSound = SoundManager.playSound(Sounds.ReelsSpin, true, 0.5)
     }
     async stop(reelsPosition: number[][]) {
         let promiseArray: Array<Promise<void>> = []
@@ -32,6 +37,8 @@ export class Reels extends PIXI.Container {
             await delay(200)
         }
         await Promise.all(promiseArray)
+        this.reelsSpinSound.stop()
+        SoundManager.playSound(Sounds.ReelsSpinEnd, false, 1)
         /* this.checkForWin() */
     }
     getSymbol(column: number, row: number) {
