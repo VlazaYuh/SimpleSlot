@@ -12,6 +12,7 @@ export class LoadingController extends Controller {
             PIXI.Loader.shared.add('assets/arrow.png')
             PIXI.Loader.shared.add('assets/startButton.png')
             PIXI.Loader.shared.add('assets/particles.json')
+            PIXI.Loader.shared.add('assets/blrrpixs016.ttf')
             PIXI.Ticker.shared.add(this.loading)
             PIXI.Loader.shared.onComplete.add(() => this.stateCompleted())
             PIXI.Loader.shared.load()
