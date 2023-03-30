@@ -34,7 +34,6 @@ export class AnimationController extends Controller {
                 await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum)
             }
         }
-
         this.stateCompleted()
     }
     private isWinSymbol(row: number, column: number) {
