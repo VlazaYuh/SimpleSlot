@@ -33,7 +33,6 @@ export class AnimationController extends Controller {
             if (spinResultWinSum >= 30) {
                 await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum)
             }
-            await Promise.all(promiseArray)
         }
         this.stateCompleted()
     }
