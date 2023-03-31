@@ -38,7 +38,7 @@ export class Reels extends PIXI.Container {
         }
         await Promise.all(promiseArray)
         this.reelsSpinSound.stop()
-        SoundManager.playSound(Sounds.ReelsSpinEnd, false, 1)
+        SoundManager.playSound(Sounds.ReelsAllEnd, false, 1) 
         /* this.checkForWin() */
     }
     getSymbol(column: number, row: number) {
