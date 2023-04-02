@@ -13,7 +13,8 @@ import { SoundManager } from './SoundManager'
 import { Sounds } from './Sounds'
 import { BigWinAnimation } from './BigWinAnimation'
 window.PIXI = PIXI
-export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, /* backgroundColor: 1099 */ })
+export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, width: 800, height: 600 /* backgroundColor: 1099 */ })
+globalThis.__PIXI_APP__ = app
 document.body.appendChild(app.view)
 export const eventEmitter = new PIXI.utils.EventEmitter()
 export const stateMachine = new StateMachine()

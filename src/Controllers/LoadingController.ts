@@ -18,6 +18,7 @@ export class LoadingController extends Controller {
             PIXI.Loader.shared.add('assets/BigWin.mp3')
             PIXI.Loader.shared.add('assets/ReelsSpinEnd.mp3')
             PIXI.Loader.shared.add('assets/particles.json')
+            PIXI.Loader.shared.add('assets/blrrpixs016.ttf')
             PIXI.Ticker.shared.add(this.loading)
             PIXI.Loader.shared.onComplete.add(() => this.stateCompleted())
             PIXI.Loader.shared.load()
