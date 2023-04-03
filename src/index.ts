@@ -9,6 +9,8 @@ import { AnimationController } from './Controllers/AnimationController'
 import { LoadingController } from './Controllers/LoadingController'
 import { LoadRect } from './LoadRect'
 import { Lines } from './Lines'
+import { SoundManager } from './SoundManager'
+import { Sounds } from './Sounds'
 import { BigWinAnimation } from './BigWinAnimation'
 window.PIXI = PIXI
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, width: 800, height: 600 /* backgroundColor: 1099 */ })
@@ -47,6 +49,7 @@ export function init() {
     bigWinAnimation.position.set(app.screen.width / 2, app.screen.height / 2)
     const linesAnim = window.linesAnim = app.stage.addChild(new Lines(reels))
     const animationController = window.animationControloler = new AnimationController(reels, linesAnim, bigWinAnimation)
+    SoundManager.playSound(Sounds.BackgroundMusic, true, 0.1)
 }
 export function delay(timeMS: number) {
     return new Promise<void>(resolve => {

@@ -2,6 +2,8 @@ import * as PIXI from 'pixi.js'
 import { gsap } from 'gsap'
 import { delay } from '.'
 import { styles } from './textStyles'
+import { SoundManager } from './SoundManager'
+import { Sounds } from './Sounds'
 
 export class BigWinAnimation extends PIXI.Container {
     private timeline: gsap.core.Timeline
@@ -27,6 +29,7 @@ export class BigWinAnimation extends PIXI.Container {
         this.visible = true
         this.createTimeline()
         this.timeline.repeat()
+        SoundManager.playSound(Sounds.BigWin, false, 0.5)
         await delay((this.duration + this.fadeDuration) * 1000)
     }
     private createTimeline() {
