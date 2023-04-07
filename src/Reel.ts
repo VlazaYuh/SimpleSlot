@@ -4,7 +4,8 @@ import { gsap } from 'gsap'
 import { CustomEase } from "gsap/CustomEase"
 import { Symbol } from './Symbol'
 import { SoundManager } from './SoundManager'
-import { Sounds } from './Sounds'
+import { SFXDictionary } from './Sounds'
+
 gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
@@ -26,7 +27,7 @@ export class Reel extends PIXI.Container {
         this.container.children[0].destroy()
         this.createSymbols()
         this.stopResolve()
-        SoundManager.playSound(Sounds.ReelsSpinEnd, false, 1)
+        SoundManager.playSFXSound(SFXDictionary.reelsSpinEnd)
     }
     private moveContainer = (delta: number) => {
         while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
