@@ -13,6 +13,7 @@ import { SoundManager } from './SoundManager'
 import { BigWinAnimation } from './BigWinAnimation'
 window.PIXI = PIXI
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, width: 800, height: 600 /* backgroundColor: 1099 */ })
+
 globalThis.__PIXI_APP__ = app
 document.body.appendChild(app.view)
 export const eventEmitter = new PIXI.utils.EventEmitter()
@@ -43,12 +44,14 @@ export function init() {
     const reels = window.reels = app.stage.addChild(new Reels(5, 5))
     reels.position.set(app.screen.width / 2, app.screen.height / 2)
     ui.init(app.screen.width, app.screen.height)
+    ui.zIndex = 2
+    app.stage.sortChildren()
     const reelController = new ReelController(reels)
     const bigWinAnimation = window.bigWinAnimation = app.stage.addChild(new BigWinAnimation())
     bigWinAnimation.position.set(app.screen.width / 2, app.screen.height / 2)
     const linesAnim = window.linesAnim = app.stage.addChild(new Lines(reels))
     const animationController = window.animationControloler = new AnimationController(reels, linesAnim, bigWinAnimation)
-    SoundManager.playBackgroundMusic()
+    SoundManager.playMusic()
 }
 export function delay(timeMS: number) {
     return new Promise<void>(resolve => {

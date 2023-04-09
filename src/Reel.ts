@@ -27,7 +27,7 @@ export class Reel extends PIXI.Container {
         this.container.children[0].destroy()
         this.createSymbols()
         this.stopResolve()
-        SoundManager.playSFXSound(SFXDictionary.reelsSpinEnd)
+        SoundManager.playSFX(SFXDictionary.ReelsSpinEnd)
     }
     private moveContainer = (delta: number) => {
         while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {

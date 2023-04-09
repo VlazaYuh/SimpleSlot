@@ -35,7 +35,7 @@ export abstract class Button extends PIXI.Container {
     }
     protected onPointerDown() {
         this.filter.brightness(0.5, false)
-        SoundManager.playSFXSound(SFXDictionary.click)
+        SoundManager.playSFX(SFXDictionary.Click)
     }
     protected onPointerOver() {
         this.filter.brightness(2, false)

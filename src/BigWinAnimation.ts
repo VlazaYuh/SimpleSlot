@@ -29,7 +29,7 @@ export class BigWinAnimation extends PIXI.Container {
         this.visible = true
         this.createTimeline()
         this.timeline.repeat()
-        SoundManager.playSFXSound(SFXDictionary.bigWin)
+        SoundManager.playSFX(SFXDictionary.BigWin)
         await delay((this.duration + this.fadeDuration) * 1000)
     }
     private createTimeline() {

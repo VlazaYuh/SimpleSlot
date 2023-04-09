@@ -6,6 +6,7 @@ import { StakeChanger } from './StakeChanger'
 import { Event } from './Event'
 import { SideMenuButton } from './SideMenuButton'
 import { SideMenu } from './SideMenu'
+import { OptionsMenu } from './OptionsMenu'
 
 export class UI extends PIXI.Container {
     openSideMenuButton: SideMenuButton
@@ -13,6 +14,7 @@ export class UI extends PIXI.Container {
     private stakeContainer: StakeChanger
     private _stakeIndex: number = 0
     private sideMenu: SideMenu
+    private optionsMenu: OptionsMenu
     get stakeIndex() {
         return this._stakeIndex
     }
@@ -21,8 +23,12 @@ export class UI extends PIXI.Container {
         this.buttonStart.position.set(width / 2 + 70, 510)
         this.stakeContainer = this.addChild(new StakeChanger())
         this.stakeContainer.position.set(width / 2 - 100, 510)
-        this.sideMenu = this.addChild(new SideMenu())
+        this.optionsMenu = this.addChild(new OptionsMenu(width, height))
+        this.optionsMenu.position.set(width/2,height/2)
+        this.sideMenu = this.addChild(new SideMenu(this.optionsMenu))
         this.sideMenu.position.set(width / 2 + 265 + 95, height / 2)
+        this.optionsMenu.zIndex=2
+        this.sortChildren()
         this.buttonStart.on('pointerup', () => {
             eventEmitter.emit(Event.PlayerPressedStart)
         })

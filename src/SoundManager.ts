@@ -1,33 +1,35 @@
 import { Howl, Howler } from 'howler'
-import { getSounds } from './Sounds'
+import { SFXDictionary, getSounds } from './Sounds'
 export class SoundManager {
     private static backgroundMusic: Howl
-    private static sfxArray: Howl[] = []
+    private static sfxArray: { [key in SFXDictionary]?: Howl } = {}
     static {
         this.backgroundMusic = new Howl({
             src: getSounds().BackgroundMusic.src,
             volume: getSounds().BackgroundMusic.volume,
             loop: getSounds().BackgroundMusic.looping
         })
-        for (let i = 0; i < getSounds().sfx.length; i++) {
-            this.sfxArray.push(new Howl({
-                src: getSounds().sfx[i].src,
-                volume: getSounds().sfx[i].volume,
-                loop: getSounds().sfx[i].looping
-            }))
+        for (const key in getSounds().sfx) {
+            this.sfxArray[key] = new Howl({
+                src: getSounds().sfx[key].src,
+                volume: getSounds().sfx[key].volume,
+                loop: getSounds().sfx[key].looping
+            })
         }
     }
-    static playSFXSound(index: number) {
+    static playSFX(index: number) {
         this.sfxArray[index].play()
         return this.sfxArray[index]
     }
-    static playBackgroundMusic() {
+    static playMusic() {
         this.backgroundMusic.play()
     }
     static muteSFX(muted: boolean) {
-        this.sfxArray.forEach((howl) => howl.mute(muted))
+        for (const key in getSounds().sfx) {
+            this.sfxArray[key].mute(muted)
+        }
     }
-    static muteBackgroundMusic(muted: boolean) {
+    static muteMusic(muted: boolean) {
         this.backgroundMusic.mute(muted)
     }
 }

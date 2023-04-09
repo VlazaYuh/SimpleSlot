@@ -28,7 +28,7 @@ export class Reels extends PIXI.Container {
     }
     start() {
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
-        this.reelsSpinSound = SoundManager.playSFXSound(SFXDictionary.reelsSpin)
+        this.reelsSpinSound = SoundManager.playSFX(SFXDictionary.ReelsSpin)
     }
     async stop(reelsPosition: number[][]) {
         let promiseArray: Array<Promise<void>> = []
@@ -38,7 +38,7 @@ export class Reels extends PIXI.Container {
         }
         await Promise.all(promiseArray)
         this.reelsSpinSound.stop()
-        SoundManager.playSFXSound(SFXDictionary.reelsAllEnd)
+        SoundManager.playSFX(SFXDictionary.ReelsAllEnd)
         /* this.checkForWin() */
     }
     getSymbol(column: number, row: number) {
