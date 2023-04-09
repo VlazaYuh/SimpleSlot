@@ -2,11 +2,12 @@ import * as PIXI from 'pixi.js'
 import { OptionsButton } from './OptionsButton'
 import { SideMenuButton } from './SideMenuButton'
 import { gsap } from 'gsap'
-import { delay } from '.'
+import { delay, eventEmitter } from '.'
 import { Checkbox } from './Checkbox'
 import { styles } from './textStyles'
 import { SoundManager } from './SoundManager'
-import { OptionsMenu } from './OptionsMenu'
+import { Options } from './Options'
+import { Event } from './Event'
 export class SideMenu extends PIXI.Container {
     private menuContainer = this.addChild(new PIXI.Container())
     private optionsButton: OptionsButton
@@ -14,10 +15,8 @@ export class SideMenu extends PIXI.Container {
     private openSideMenuButton: SideMenuButton
     private duration = 0.3
     private timeline: gsap.core.Timeline
-    private optionsMenu: OptionsMenu
-    constructor(optionsMenu: OptionsMenu) {
+    constructor() {
         super()
-        this.optionsMenu = optionsMenu
         this.addButtons()
         this.createTimeline()
         this.subscribe()
@@ -55,8 +54,7 @@ export class SideMenu extends PIXI.Container {
             this.openSideMenuButton.visible = false
         })
         this.optionsButton.on('pointerup', () => {
-            this.optionsMenu.visible = true
+            eventEmitter.emit(Event.OptionsClicked)
         })
     }
 }
-//x=925

@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { Button } from './Button'
+
 export class Checkbox extends Button {
     private box: PIXI.Sprite
     private check: PIXI.Sprite
-    get checkVisible() {
+    get value() {
         return this.check.visible
     }
     constructor(active: boolean) {
@@ -13,9 +14,11 @@ export class Checkbox extends Button {
         this.check.anchor.set(0.5)
         this.box.anchor.set(0.5)
         this.check.visible = active
+
     }
     protected onPointerUp(): void {
         super.onPointerUp()
         this.check.visible = !this.check.visible
+        this.emit('check', this.value)
     }
 }

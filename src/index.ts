@@ -13,7 +13,6 @@ import { SoundManager } from './SoundManager'
 import { BigWinAnimation } from './BigWinAnimation'
 window.PIXI = PIXI
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, width: 800, height: 600 /* backgroundColor: 1099 */ })
-
 globalThis.__PIXI_APP__ = app
 document.body.appendChild(app.view)
 export const eventEmitter = new PIXI.utils.EventEmitter()
@@ -27,7 +26,7 @@ stateMachine.setConfig({
         { from: State.Animation, to: State.Idle }],
     initialState: State.Loading
 })
-export const ui = app.stage.addChild(new UI())
+export const ui = new UI()
 new UserController()
 const loadingController = window.loadingController = new LoadingController()
 export const loadingGraphics = window.loadingGraphics = app.stage.addChild(new LoadRect(app.screen.width, app.screen.height))
@@ -43,14 +42,13 @@ stateMachine.start()
 export function init() {
     const reels = window.reels = app.stage.addChild(new Reels(5, 5))
     reels.position.set(app.screen.width / 2, app.screen.height / 2)
-    ui.init(app.screen.width, app.screen.height)
-    ui.zIndex = 2
-    app.stage.sortChildren()
     const reelController = new ReelController(reels)
     const bigWinAnimation = window.bigWinAnimation = app.stage.addChild(new BigWinAnimation())
     bigWinAnimation.position.set(app.screen.width / 2, app.screen.height / 2)
     const linesAnim = window.linesAnim = app.stage.addChild(new Lines(reels))
     const animationController = window.animationControloler = new AnimationController(reels, linesAnim, bigWinAnimation)
+    app.stage.addChild(ui)
+    ui.init(app.screen.width, app.screen.height)
     SoundManager.playMusic()
 }
 export function delay(timeMS: number) {

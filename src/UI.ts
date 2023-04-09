@@ -6,7 +6,7 @@ import { StakeChanger } from './StakeChanger'
 import { Event } from './Event'
 import { SideMenuButton } from './SideMenuButton'
 import { SideMenu } from './SideMenu'
-import { OptionsMenu } from './OptionsMenu'
+import { Options } from './Options'
 
 export class UI extends PIXI.Container {
     openSideMenuButton: SideMenuButton
@@ -14,7 +14,7 @@ export class UI extends PIXI.Container {
     private stakeContainer: StakeChanger
     private _stakeIndex: number = 0
     private sideMenu: SideMenu
-    private optionsMenu: OptionsMenu
+    private options: Options
     get stakeIndex() {
         return this._stakeIndex
     }
@@ -23,17 +23,18 @@ export class UI extends PIXI.Container {
         this.buttonStart.position.set(width / 2 + 70, 510)
         this.stakeContainer = this.addChild(new StakeChanger())
         this.stakeContainer.position.set(width / 2 - 100, 510)
-        this.optionsMenu = this.addChild(new OptionsMenu(width, height))
-        this.optionsMenu.position.set(width/2,height/2)
-        this.sideMenu = this.addChild(new SideMenu(this.optionsMenu))
+        this.sideMenu = this.addChild(new SideMenu())
         this.sideMenu.position.set(width / 2 + 265 + 95, height / 2)
-        this.optionsMenu.zIndex=2
-        this.sortChildren()
+        this.options = this.addChild(new Options(width, height))
+        this.options.position.set(width / 2, height / 2)
         this.buttonStart.on('pointerup', () => {
             eventEmitter.emit(Event.PlayerPressedStart)
         })
         stateMachine.onStateChange(async state => {
             this.buttonStart.disabled = state !== State.Idle
         })
+    }
+    optionsShow() {
+        this.options.visible = true
     }
 }
