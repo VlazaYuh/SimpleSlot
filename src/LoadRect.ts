@@ -7,7 +7,7 @@ export class LoadRect extends PIXI.Graphics {
         this.appheight = height
         this.appwidth = width
     }
-    drawRectProgress(progress) {
+    drawRectProgress(progress: number) {
         this.beginFill(0xFFFFFF)
         this.drawRect(this.appwidth / 8, this.appheight / 2, (this.appwidth - this.appwidth / 8 * 2) / 100 * progress, 50)
         this.endFill()

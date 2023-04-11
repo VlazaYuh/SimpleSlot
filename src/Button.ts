@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { SoundManager } from './SoundManager'
-import { Sounds } from './Sounds'
+import { SFXDictionary } from './Sounds'
+
 export abstract class Button extends PIXI.Container {
     protected filter = new PIXI.filters.ColorMatrixFilter()
     get disabled() {
@@ -34,7 +35,7 @@ export abstract class Button extends PIXI.Container {
     }
     protected onPointerDown() {
         this.filter.brightness(0.5, false)
-        SoundManager.playSound(Sounds.Click,false,0.5)
+        SoundManager.playSFX(SFXDictionary.Click)
     }
     protected onPointerOver() {
         this.filter.brightness(2, false)

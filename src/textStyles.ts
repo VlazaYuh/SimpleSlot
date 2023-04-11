@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 export const styles = {
     stakeStyle: new PIXI.TextStyle({
-        fontFamily: 'Arial',
+        fontFamily: 'Blrrpix',
         fontSize: 36,
         fontStyle: 'italic',
         fontWeight: 'bold',
@@ -32,5 +32,11 @@ export const styles = {
         dropShadowBlur: 4,
         dropShadowAngle: Math.PI / 6,
         dropShadowDistance: 6,
+    }),
+    menuStyle: new PIXI.TextStyle({
+        fontFamily: 'Blrrpix',
+        fontSize: 11,
+        fill: ['#660000', '#000000'],
+        stroke: '#4a1850',
     })
 }

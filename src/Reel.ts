@@ -4,7 +4,8 @@ import { gsap } from 'gsap'
 import { CustomEase } from "gsap/CustomEase"
 import { Symbol } from './Symbol'
 import { SoundManager } from './SoundManager'
-import { Sounds } from './Sounds'
+import { SFXDictionary } from './Sounds'
+
 gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
@@ -26,12 +27,12 @@ export class Reel extends PIXI.Container {
         this.container.children[0].destroy()
         this.createSymbols()
         this.stopResolve()
-        SoundManager.playSound(Sounds.ReelsSpinEnd, false, 1)
+        SoundManager.playSFX(SFXDictionary.ReelsSpinEnd)
     }
     private moveContainer = (delta: number) => {
         while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
             this.container.y -= this.symbolSize
-            this.container.children.forEach((child) => child.y += this.symbolSize /* + delta * this.speed */)
+            this.container.children.forEach((child) => child.y += this.symbolSize)
             this.container.children[0].destroy()
             this.createSymbols()
             if (this.stopping && this.queue.length === 1) {
@@ -47,7 +48,6 @@ export class Reel extends PIXI.Container {
     }
     constructor(private readonly rows: number, symbolsize: number) {
         super()
-        /* this.addChild(new PIXI.Graphics().beginFill(0xffffff).drawCircle(0,0,5))  */
         this.symbolSize = symbolsize
         this.container.y = -this.symbolSize * (rows - 1) / 2
         this.containerOffset = this.container.y
@@ -83,11 +83,6 @@ export class Reel extends PIXI.Container {
             this.stopping = true
         })
     }
-    private getSprite(id = Math.floor(Math.random() * icons.length)) {
-        const sprite = PIXI.Sprite.from(icons[id])
-        sprite.anchor.set(0.5)
-        return sprite
-    }
     private createMask() {
         const mask = new PIXI.Graphics()
         mask.beginFill(0, 0)
@@ -97,7 +92,7 @@ export class Reel extends PIXI.Container {
     }
     private createSymbols(amount = 1,) {
         while (amount--) {
-            const sprite = this.container.addChild(new Symbol(this.queue.pop()))/*  = this.container.addChild(this.getSprite(this.queue.pop())) */
+            const sprite = this.container.addChild(new Symbol(this.queue.pop()))
             sprite.y = (amount - 1) * this.symbolSize
         }
     }

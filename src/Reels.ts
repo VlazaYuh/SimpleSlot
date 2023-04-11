@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { Reel } from './Reel'
 import { delay } from '.'
 import { SoundManager } from './SoundManager'
-import { Sounds } from './Sounds'
+import { SFXDictionary } from './Sounds'
 import { Howl } from 'howler'
 export class Reels extends PIXI.Container {
     private symbolSize = 50
@@ -28,7 +28,7 @@ export class Reels extends PIXI.Container {
     }
     start() {
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
-        this.reelsSpinSound = SoundManager.playSound(Sounds.ReelsSpin, true, 0.5)
+        this.reelsSpinSound = SoundManager.playSFX(SFXDictionary.ReelsSpin)
     }
     async stop(reelsPosition: number[][]) {
         let promiseArray: Array<Promise<void>> = []
@@ -38,8 +38,7 @@ export class Reels extends PIXI.Container {
         }
         await Promise.all(promiseArray)
         this.reelsSpinSound.stop()
-        SoundManager.playSound(Sounds.ReelsAllEnd, false, 1) 
-        /* this.checkForWin() */
+        SoundManager.playSFX(SFXDictionary.ReelsAllEnd)
     }
     getSymbol(column: number, row: number) {
         return (this.reelsContainer.children[column] as Reel).getSymbol(row)
