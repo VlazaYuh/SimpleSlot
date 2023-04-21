@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import { eventEmitter, stateMachine } from '.'
 import { State } from './State'
 import { stakeDict } from './stakeDict'
-import { styles } from './textStyles'
+import { textStyles } from './textStyles'
 import { StakeButton } from './StakeButton'
 import { Event } from './Event'
 export class StakeChanger extends PIXI.Container {
@@ -16,7 +16,7 @@ export class StakeChanger extends PIXI.Container {
         this.stakeDown = this.addChild(new StakeButton())
         this.stakeDown.pivot.x = this.stakeUp.pivot.x = -40
         this.stakeDown.rotation = Math.PI
-        this.stakeText = this.addChild(new PIXI.Text(`${stakeDict[0]}`, styles.stakeStyle))
+        this.stakeText = this.addChild(new PIXI.Text(`${stakeDict[0]}`, textStyles.stakeStyle))
         this.stakeText.anchor.set(0.5)
         stateMachine.onStateChange(async state => {
             if (state === State.Idle) {

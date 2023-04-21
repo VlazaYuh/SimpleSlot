@@ -4,7 +4,7 @@ import { SideMenuButton } from './SideMenuButton'
 import { gsap } from 'gsap'
 import { delay, eventEmitter } from '.'
 import { Checkbox } from './Checkbox'
-import { styles } from './textStyles'
+import { textStyles } from './textStyles'
 import { SoundManager } from './SoundManager'
 import { Options } from './Options'
 import { Event } from './Event'
@@ -55,6 +55,7 @@ export class SideMenu extends PIXI.Container {
         })
         this.optionsButton.on('pointerup', () => {
             eventEmitter.emit(Event.OptionsClicked)
+            eventEmitter.emit(Event.OpenFade)
         })
     }
 }

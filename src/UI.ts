@@ -7,6 +7,9 @@ import { Event } from './Event'
 import { SideMenuButton } from './SideMenuButton'
 import { SideMenu } from './SideMenu'
 import { Options } from './Options'
+import { AutoPlay } from './AutoPlay'
+import { Fade } from './Fade'
+import { AutoPlayButton } from './AutoPlayButton'
 
 export class UI extends PIXI.Container {
     openSideMenuButton: SideMenuButton
@@ -15,6 +18,9 @@ export class UI extends PIXI.Container {
     private _stakeIndex: number = 0
     private sideMenu: SideMenu
     private options: Options
+    private autoPlay: AutoPlay
+    private autoPlayButton: AutoPlayButton
+    private fade: Fade
     get stakeIndex() {
         return this._stakeIndex
     }
@@ -25,8 +31,17 @@ export class UI extends PIXI.Container {
         this.stakeContainer.position.set(width / 2 - 100, 510)
         this.sideMenu = this.addChild(new SideMenu())
         this.sideMenu.position.set(width / 2 + 265 + 95, height / 2)
-        this.options = this.addChild(new Options(width, height))
+        this.autoPlayButton = this.addChild(new AutoPlayButton('AutoPlay'))
+        this.autoPlayButton.position.set(width / 2 + 170, height / 2 + 205)
+        this.fade = this.addChild(new Fade(width, height))
+        this.autoPlay = this.addChild(new AutoPlay())
+        this.autoPlay.position.set(width / 2, height / 2)
+        this.options = this.addChild(new Options())
         this.options.position.set(width / 2, height / 2)
+        this.autoPlayButton.on('pointerup', () => {
+            eventEmitter.emit(Event.AutoPlayClicked)
+            eventEmitter.emit(Event.OpenFade)
+        })
         this.buttonStart.on('pointerup', () => {
             eventEmitter.emit(Event.PlayerPressedStart)
         })
