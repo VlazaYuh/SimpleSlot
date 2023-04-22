@@ -18,7 +18,8 @@ export class AutoPlay extends PIXI.Container {
     private winDecrease: number = 0
     private autoPlayStart: AutoPlayButton
     private autoPlayStop: AutoPlayButton
-    private autoPlayStarted = false
+    autoPlayStarted = false
+
     constructor() {
         super()
         this.createMenu()
@@ -41,10 +42,11 @@ export class AutoPlay extends PIXI.Container {
             eventEmitter.emit(Event.PlayerPressedStart)
             eventEmitter.emit(Event.CloseDialogs)
             eventEmitter.emit(Event.CloseFade)
+            eventEmitter.emit(Event.AutoPlayStarted)
             numberofAutoPlays = parseInt(this.autoPlayText.text)
         })
         this.autoPlayStop.on('pointerup', () => {
-            this.autoPlayStarted = false
+            /* this.autoPlayStarted = false */
             eventEmitter.emit(Event.CloseDialogs)
             eventEmitter.emit(Event.CloseFade)
         })
@@ -54,12 +56,12 @@ export class AutoPlay extends PIXI.Container {
                     if (state === State.Idle) {
                         eventEmitter.emit(Event.PlayerPressedStart)
                         numberofAutoPlays--
-                        /*  console.log(`${numberofAutoPlays}`) */
                     }
                     resolve()
                 })
             } else {
                 this.autoPlayStarted = false
+                eventEmitter.emit(Event.AutoPlayEnded)
             }
         })
         eventEmitter.on(Event.CloseDialogs, () => this.menuContainer.visible = false)
@@ -87,9 +89,9 @@ export class AutoPlay extends PIXI.Container {
         this.autoPlayDown.pivot.x = this.autoPlayUp.pivot.x = -40
         this.autoPlayDown.rotation = Math.PI
         const sliderUp = this.menuContainer.addChild(this.createOption(200, this.winIncrease, 300, 'If balance increases by'))
-        sliderUp.position.set(-140, -30)
+        sliderUp.position.set(-130, -30)
         const sliderDown = this.menuContainer.addChild(this.createOption(200, this.winDecrease, 300, 'If balance decreases by'))
-        sliderDown.position.set(-140, 20)
+        sliderDown.position.set(-130, 20)
         this.autoPlayStart = this.menuContainer.addChild(new AutoPlayButton('Start'))
         this.autoPlayStart.position.set(90, 120)
         this.autoPlayStop = this.menuContainer.addChild(new AutoPlayButton('Cancel'))

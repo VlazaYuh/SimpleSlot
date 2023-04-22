@@ -5,5 +5,8 @@ export enum Event {
     OpenFade = 'fadeOpened',
     CloseFade = 'fadeClosed',
     CloseDialogs = 'closeDialogs',
-    AutoPlayClicked = 'autoPlayClicked'
+    AutoPlayClicked = 'autoPlayClicked',
+    AutoPlayStarted = 'autoPlayStarted',
+    AutoPlayEnded = 'autoPlayEnded'
+
 }

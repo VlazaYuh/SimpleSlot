@@ -30,50 +30,18 @@ export class Slider extends PIXI.Container {
         this.handle
             .on('pointerdown', () => {
                 this.slider.interactive = true
-                this.emit('slidermovement', this.sliderTarget)
-                this.slider.addListener('pointermove', (e: PIXI.InteractionEvent) => {
-                    this.handle.x = Math.max(0, Math.min(
-                        this.slider.toLocal(e.data.global).x,
-                        this.slider.width
-                    ))
-                    const t = this.handle.x / this.sliderWidth
-                    this.sliderTarget = this.maxValue * t
-                })
+                this.slider.addListener('pointermove', this.onDrag)
             })
             .on('pointerup', () => {
                 this.slider.interactive = false
-                this.emit('slidermovement', this.sliderTarget)
-                this.slider.removeListener('pointermove', (e: PIXI.InteractionEvent) => {
-                    this.handle.x = Math.max(0, Math.min(
-                        this.slider.toLocal(e.data.global).x,
-                        this.slider.width
-                    ))
-                    const t = this.handle.x / this.sliderWidth
-                    this.sliderTarget = this.maxValue * t
-                })
+                this.slider.removeListener('pointermove', this.onDrag)
             })
             .on('pointerupoutside', () => {
                 this.slider.interactive = false
-                this.emit('slidermovement', this.sliderTarget)
-                this.slider.removeListener('pointermove', (e: PIXI.InteractionEvent) => {
-                    this.handle.x = Math.max(0, Math.min(
-                        this.slider.toLocal(e.data.global).x,
-                        this.slider.width
-                    ))
-                    const t = this.handle.x / this.sliderWidth
-                    this.sliderTarget = this.maxValue * t
-                })
+                this.slider.removeListener('pointermove', this.onDrag)
             })
     }
-   /*  private onDragStart() {
-        this.slider.interactive = true
-        this.slider.addListener('pointermove', this.onDrag)
-    }
-    private onDragEnd(e) {
-        this.slider.interactive = false
-        this.slider.removeListener('pointermove', this.onDrag)
-    }
-    private onDrag(e: PIXI.InteractionEvent) {
+    private onDrag = (e: PIXI.InteractionEvent) => {
         this.emit('slidermovement', this.sliderTarget)
         this.handle.x = Math.max(0, Math.min(
             this.slider.toLocal(e.data.global).x,
@@ -81,5 +49,5 @@ export class Slider extends PIXI.Container {
         ))
         const t = this.handle.x / this.sliderWidth
         this.sliderTarget = this.maxValue * t
-    } */
+    }
 }

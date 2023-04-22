@@ -20,6 +20,7 @@ export class UI extends PIXI.Container {
     private options: Options
     private autoPlay: AutoPlay
     private autoPlayButton: AutoPlayButton
+    private autoPlayStop: AutoPlayButton
     private fade: Fade
     get stakeIndex() {
         return this._stakeIndex
@@ -33,6 +34,9 @@ export class UI extends PIXI.Container {
         this.sideMenu.position.set(width / 2 + 265 + 95, height / 2)
         this.autoPlayButton = this.addChild(new AutoPlayButton('AutoPlay'))
         this.autoPlayButton.position.set(width / 2 + 170, height / 2 + 205)
+        this.autoPlayStop = this.addChild(new AutoPlayButton('Stop'))
+        this.autoPlayStop.position.set(width / 2 + 170, height / 2 + 205)
+        this.autoPlayStop.visible = false
         this.fade = this.addChild(new Fade(width, height))
         this.autoPlay = this.addChild(new AutoPlay())
         this.autoPlay.position.set(width / 2, height / 2)
@@ -44,6 +48,15 @@ export class UI extends PIXI.Container {
         })
         this.buttonStart.on('pointerup', () => {
             eventEmitter.emit(Event.PlayerPressedStart)
+        })
+        this.autoPlayStop.on('pointerup', () => this.autoPlay.autoPlayStarted = false)
+        eventEmitter.on(Event.AutoPlayStarted, () => {
+            this.autoPlayStop.visible = true
+            this.autoPlayButton.visible = false
+        })
+        eventEmitter.on(Event.AutoPlayEnded, () => {
+            this.autoPlayStop.visible = false
+            this.autoPlayButton.visible = true
         })
         stateMachine.onStateChange(async state => {
             this.buttonStart.disabled = state !== State.Idle
