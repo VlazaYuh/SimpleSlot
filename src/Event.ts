@@ -1,12 +1,12 @@
 export enum Event {
-    StakeChanged = 'stake_changed',
-    PlayerPressedStart = 'player_pressed_start',
+    StakeChanged = 'stakeChanged',
+    PlayerPressedStart = 'playerPressedStart',
     OptionsClicked = 'optionsClicked',
     OpenFade = 'fadeOpened',
     CloseFade = 'fadeClosed',
     CloseDialogs = 'closeDialogs',
     AutoPlayClicked = 'autoPlayClicked',
     AutoPlayStarted = 'autoPlayStarted',
-    AutoPlayEnded = 'autoPlayEnded'
-
+    AutoPlayStopped = 'autoPlayStopped',
+    ReduceAutoPlay = 'reduceAutoPlay'
 }
