@@ -20,13 +20,12 @@ export class UserController extends Controller {
             this.count = count - 1
             this.upTarget = upTarget
             this.downTarget = downTarget
-            console.log(count, upTarget, downTarget)
+            //implement up/down test
         })
         eventEmitter.on(Event.AutoPlayStopped, () => this._autoPlay = false)
         eventEmitter.on(Event.ReduceAutoPlay, () => {
             if (this.count !== undefined && this.count !== 0) {
                 this.count--
-                console.log(this.count)
             }
         })
     }
