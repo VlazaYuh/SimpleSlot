@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { gsap } from 'gsap'
 import { delay } from '.'
-import { styles } from './textStyles'
+import { textStyles } from './textStyles'
 import { SoundManager } from './SoundManager'
 import { SFXDictionary } from './Sounds'
 
@@ -14,10 +14,10 @@ export class BigWinAnimation extends PIXI.Container {
     constructor() {
         super()
         this.text = this.addChild(new PIXI.Text('WinTemp'))
-        this.text.style = styles.winStyle
+        this.text.style = textStyles.winStyle
         this.text.anchor.set(0.5)
         this.stakeText = this.addChild(new PIXI.Text(`StakeTemp`))
-        this.stakeText.style = styles.winStakeStyle
+        this.stakeText.style = textStyles.winStakeStyle
         this.stakeText.anchor.set(0.5)
         this.visible = false
     }

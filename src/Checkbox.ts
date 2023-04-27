@@ -7,6 +7,9 @@ export class Checkbox extends Button {
     get value() {
         return this.check.visible
     }
+    set value(value: boolean) {
+        this.check.visible = value
+    }
     constructor(active: boolean) {
         super()
         this.box = this.addChild(new PIXI.Sprite(PIXI.Texture.from('assets/checkbox.png')))
@@ -14,7 +17,6 @@ export class Checkbox extends Button {
         this.check.anchor.set(0.5)
         this.box.anchor.set(0.5)
         this.check.visible = active
-
     }
     protected onPointerUp(): void {
         super.onPointerUp()

@@ -1,43 +1,51 @@
 import * as PIXI from 'pixi.js'
 import { Checkbox } from './Checkbox'
-import { styles } from './textStyles'
+import { textStyles } from './textStyles'
 import { SoundManager } from './SoundManager'
+import { eventEmitter } from '.'
+import { Event } from './Event'
 export class Options extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
-    private menu: PIXI.Sprite
-    private background: PIXI.Graphics
-    constructor(width: number, height: number) {
+    constructor() {
         super()
-        this.init(width, height)
+        this.init()
         this.visible = false
-        this.subscriptions()
+        eventEmitter.on(Event.OptionsClicked, () => this.show())
     }
-    private init(width: number, height: number) {
-        this.background = this.container.addChild(new PIXI.Graphics().beginFill(0).drawRect(-width / 2, -height / 2, width, height).endFill())
-        this.background.alpha = 0.5
-        this.background.interactive = true
-        this.menu = this.container.addChild(new PIXI.Sprite(PIXI.Texture.from('assets/optionsMenu.png')))
-        this.menu.anchor.set(0.5)
-        const optionMusic = this.container.addChild(this.createOption('Music', value => SoundManager.muteMusic(!value), 0.5))
+    private init() {
+        const menu = this.container.addChild(new PIXI.Sprite(PIXI.Texture.from('assets/optionsMenu.png')))
+        menu.anchor.set(0.5)
+        menu.interactive = true
+        const musicKey = 'musicMuted'
+        const SFXKey = 'SFXMuted'
+        SoundManager.muteMusic(!!localStorage.getItem(musicKey))
+        SoundManager.muteSFX(!!localStorage.getItem(SFXKey))
+        const optionMusic = this.container.addChild(this.createOption('Music', value => {
+            SoundManager.muteMusic(!value)
+            localStorage.setItem(musicKey, (!value || '').toString())
+        }, 0.5, !localStorage.getItem(musicKey)))
         optionMusic.position.set(25, -45)
-        const optionSFX = this.container.addChild(this.createOption('Effects', value => SoundManager.muteSFX(!value), 0.5))
+        const optionSFX = this.container.addChild(this.createOption('Effects', value => {
+            SoundManager.muteSFX(!value)
+            localStorage.setItem(SFXKey, (!value || '').toString())
+        }, 0.5, !localStorage.getItem(SFXKey)))
         optionSFX.position.set(25, -15)
+        eventEmitter.on(Event.CloseDialogs, () => this.visible = false)
     }
-    private subscriptions() {
-        this.background.on('pointerup', () => {
-            this.visible = false
-        })
-    }
-    private createOption(text: string, callback: (value: boolean) => void, scale: number = 1) {
-        const checkboxContainer = this.container.addChild(new PIXI.Container())
-        const checkbox = checkboxContainer.addChild(new Checkbox(true))
+    private createOption(text: string, callback: (value: boolean) => void, scale: number = 1, value: boolean) {
+        const checkboxContainer = new PIXI.Container()
+        const checkbox = checkboxContainer.addChild(new Checkbox(value))
         checkbox.scale.set(scale)
-        const checkboxText = checkboxContainer.addChild(new PIXI.Text(text, styles.menuStyle))
+        const checkboxText = checkboxContainer.addChild(new PIXI.Text(text, textStyles.menuStyle))
         checkboxText.x = -25
         checkboxText.anchor.set(1, 0.5)
         checkbox.on('check', (value) => {
             callback(value)
         })
         return checkboxContainer
+    }
+    private show() {
+        this.visible = true
+        eventEmitter.emit(Event.OpenFade)
     }
 }

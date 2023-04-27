@@ -14,6 +14,7 @@ export class LoadingController extends Controller {
             PIXI.Loader.shared.add('assets/options.png')
             PIXI.Loader.shared.add('assets/sideMenu.png')
             PIXI.Loader.shared.add('assets/optionsMenu.png')
+            PIXI.Loader.shared.add('assets/autoPlayButton.png')
             PIXI.Loader.shared.add('assets/check.png')
             PIXI.Loader.shared.add('assets/checkbox.png')
             PIXI.Loader.shared.add('assets/BackgroundMusic.mp3')

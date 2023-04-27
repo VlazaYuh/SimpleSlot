@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-export const styles = {
+export const textStyles = {
     stakeStyle: new PIXI.TextStyle({
         fontFamily: 'Blrrpix',
         fontSize: 36,
@@ -38,5 +38,16 @@ export const styles = {
         fontSize: 11,
         fill: ['#660000', '#000000'],
         stroke: '#4a1850',
+    }),
+    autoPlayStyle: new PIXI.TextStyle({
+        fontFamily: 'Blrrpix',
+        fontSize: 40,
+        fill: ['#ffffff', '#00ff99'],
+        stroke: '#4a1850',
+        dropShadow: true,
+        dropShadowColor: '#000000',
+        dropShadowBlur: 4,
+        dropShadowAngle: Math.PI / 6,
+        dropShadowDistance: 6,
     })
 }
