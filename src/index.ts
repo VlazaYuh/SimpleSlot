@@ -18,7 +18,7 @@ globalThis.__PIXI_APP__ = app
 document.body.appendChild(app.view)
 export const eventEmitter = new PIXI.utils.EventEmitter()
 export const stateMachine = new StateMachine()
-const userController = new UserController()
+export const userController = new UserController()
 stateMachine.setConfig({
     transitions: [
         { from: State.Loading, to: State.Init },

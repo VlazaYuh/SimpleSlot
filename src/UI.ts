@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { eventEmitter, stateMachine } from '.'
+import { eventEmitter, stateMachine, userController } from '.'
 import { State } from './State'
 import { StartButton } from './StartButton'
 import { StakeChanger } from './StakeChanger'
@@ -51,18 +51,21 @@ export class UI extends PIXI.Container {
         })
         this.autoPlayStop.on('pointerup', () => eventEmitter.emit(Event.AutoPlayStopped))
         eventEmitter.on(Event.AutoPlayStarted, () => {
-            this.autoPlayStop.visible = true
-            this.autoPlayOpen.visible = false
-        })
-        eventEmitter.on(Event.AutoPlayStopped, () => {
-            this.autoPlayStop.visible = false
-            this.autoPlayOpen.visible = true
+            this.autoPlayVisibility(true)
         })
         stateMachine.onStateChange(async state => {
             this.buttonStart.disabled = state !== State.Idle
+            this.autoPlayOpen.disabled = state === State.Spinning
+            if ((userController.autoPlay && state !== State.Idle) !== this.autoPlayStop.visible) {
+                this.autoPlayVisibility(userController.autoPlay && state !== State.Idle)
+            }
         })
     }
     optionsShow() {
         this.options.visible = true
+    }
+    private autoPlayVisibility(value: boolean) {
+        this.autoPlayStop.visible = value
+        this.autoPlayOpen.visible = !value
     }
 }
