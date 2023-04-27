@@ -7,18 +7,17 @@ import { Event } from './Event'
 import { SideMenuButton } from './SideMenuButton'
 import { SideMenu } from './SideMenu'
 import { Options } from './Options'
-import { AutoPlay } from './AutoPlay'
+import { AutoPlayMenu } from './AutoPlayMenu'
 import { Fade } from './Fade'
 import { AutoPlayButton } from './AutoPlayButton'
 
 export class UI extends PIXI.Container {
-    openSideMenuButton: SideMenuButton
     private buttonStart: StartButton
     private stakeContainer: StakeChanger
     private _stakeIndex: number = 0
     private sideMenu: SideMenu
     private options: Options
-    private autoPlay: AutoPlay
+    private autoPlayMenu: AutoPlayMenu
     private autoPlayOpen: AutoPlayButton
     private autoPlayStop: AutoPlayButton
     private fade: Fade
@@ -38,8 +37,8 @@ export class UI extends PIXI.Container {
         this.autoPlayStop.position = this.autoPlayOpen.position
         this.autoPlayStop.visible = false
         this.fade = this.addChild(new Fade(width, height))
-        this.autoPlay = this.addChild(new AutoPlay())
-        this.autoPlay.position.set(width / 2, height / 2)
+        this.autoPlayMenu = this.addChild(new AutoPlayMenu())
+        this.autoPlayMenu.position.set(width / 2, height / 2)
         this.options = this.addChild(new Options())
         this.options.position.set(width / 2, height / 2)
         this.autoPlayOpen.on('pointerup', () => {
@@ -60,9 +59,6 @@ export class UI extends PIXI.Container {
                 this.autoPlayVisibility(userController.autoPlay && state !== State.Idle)
             }
         })
-    }
-    optionsShow() {
-        this.options.visible = true
     }
     private autoPlayVisibility(value: boolean) {
         this.autoPlayStop.visible = value

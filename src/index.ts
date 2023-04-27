@@ -12,6 +12,7 @@ import { Lines } from './Lines'
 import { SoundManager } from './SoundManager'
 import { BigWinAnimation } from './BigWinAnimation'
 import { Event } from './Event'
+import { getSpinResult } from './spinResult'
 window.PIXI = PIXI
 export const app = new PIXI.Application({ sharedTicker: true, sharedLoader: true, width: 800, height: 600 /* backgroundColor: 1099 */ })
 globalThis.__PIXI_APP__ = app
@@ -19,13 +20,14 @@ document.body.appendChild(app.view)
 export const eventEmitter = new PIXI.utils.EventEmitter()
 export const stateMachine = new StateMachine()
 export const userController = new UserController()
+const checkAutoPlay = () => userController.autoPlay ? State.Spinning : State.Idle
 stateMachine.setConfig({
     transitions: [
         { from: State.Loading, to: State.Init },
         { from: State.Init, to: State.Idle },
         { from: State.Idle, to: State.Spinning },
-        { from: State.Spinning, to: State.Animation },
-        { from: State.Animation, to: () => { eventEmitter.emit(Event.ReduceAutoPlay); return userController.autoPlay ? State.Spinning : State.Idle } }],
+        { from: State.Spinning, to: () => getSpinResult().win ? State.Animation : checkAutoPlay() },
+        { from: State.Animation, to: checkAutoPlay }],
     initialState: State.Loading
 })
 export const ui = new UI()

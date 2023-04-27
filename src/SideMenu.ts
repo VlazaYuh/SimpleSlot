@@ -55,7 +55,6 @@ export class SideMenu extends PIXI.Container {
         })
         this.optionsButton.on('pointerup', () => {
             eventEmitter.emit(Event.OptionsClicked)
-            eventEmitter.emit(Event.OpenFade)
         })
     }
 }

@@ -2,10 +2,8 @@ import * as PIXI from 'pixi.js'
 export class Slider extends PIXI.Container {
     private slider: PIXI.Graphics
     private handle: PIXI.Graphics
-    private sliderWidth: number
-    constructor(sliderWidth: number) {
+    constructor(private sliderWidth: number) {
         super()
-        this.sliderWidth = sliderWidth
         this.initElements()
         this.subscribtions()
     }
@@ -33,15 +31,14 @@ export class Slider extends PIXI.Container {
             })
     }
     private onDrag = (e: PIXI.InteractionEvent) => {
-        const newX = this.slider.toLocal(e.data.global).x
+        const newX = e.data.getLocalPosition(this.slider).x
         if (this.handle.x !== newX) {
-
             this.handle.x = Math.max(0, Math.min(
-                this.slider.toLocal(e.data.global).x,
+                e.data.getLocalPosition(this.slider).x,
                 this.sliderWidth
             ))
-            const t = this.handle.x / this.sliderWidth
-            this.emit('slidermovement', t)
+            const value = this.handle.x / this.sliderWidth
+            this.emit('slidermovement', value)
         }
     }
 

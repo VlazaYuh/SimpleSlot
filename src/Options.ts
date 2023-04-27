@@ -10,6 +10,7 @@ export class Options extends PIXI.Container {
         super()
         this.init()
         this.visible = false
+        eventEmitter.on(Event.OptionsClicked, () => this.show())
     }
     private init() {
         const menu = this.container.addChild(new PIXI.Sprite(PIXI.Texture.from('assets/optionsMenu.png')))
@@ -42,5 +43,9 @@ export class Options extends PIXI.Container {
             callback(value)
         })
         return checkboxContainer
+    }
+    private show() {
+        this.visible = true
+        eventEmitter.emit(Event.OpenFade)
     }
 }
