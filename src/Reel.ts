@@ -11,6 +11,7 @@ gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
     private _speed = 5
+    private quickSpeed = 10
     private symbolSize: number
     private running = false
     private stopping: boolean
@@ -18,10 +19,7 @@ export class Reel extends PIXI.Container {
     private containerOffset: number
     private queue: Array<number> = []
     private stopResolve
-    private _animationDuration = 0.5
-    get animationDuration(){
-        return this._animationDuration
-    }
+    private animationDuration = 0.5
     set speed(time: number) {
         this._speed = time
     }
@@ -31,7 +29,7 @@ export class Reel extends PIXI.Container {
     private animation = async () => {
         await gsap.to(this.container, {
             y: -this.symbolSize, ease: CustomEase.create
-                ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: this._animationDuration
+                ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: this.animationDuration
         })
         this.container.children.forEach((child) => child.y += this.symbolSize)
         this.container.y = this.containerOffset
