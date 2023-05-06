@@ -26,11 +26,14 @@ export class BigWinAnimation extends PIXI.Container {
     }
     async animate(win: 'big' | 'super' | 'mega', sum: number, isQuick = false) {
         this.text.text = win === 'big' ? 'Big Win' : win === 'mega' ? 'Mega Win' : 'Super Win'
+        if (isQuick) {
+            this.timeline.duration(this.quickDuration)
+        }
         this.text.alpha = 1
         this.stakeText.alpha = 1
         this.stakeText.text = `${sum}`
         this.visible = true
-        const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
         const callback = () => {
             this.timeline.duration(this.quickDuration)
         }
@@ -39,6 +42,7 @@ export class BigWinAnimation extends PIXI.Container {
         SoundManager.playSFX(SFXDictionary.BigWin)
         await this.timeline
         eventEmitter.off(Event.SkipAnimation, callback)
+        this.timeline.duration(this.duration)
     }
     private createTimeline() {
         this.timeline = gsap.timeline({ paused: true })

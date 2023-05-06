@@ -80,7 +80,7 @@ export class Lines extends PIXI.Container {
         return timeLine
     }
     async playLines(isQuick = false) {
-        const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
         if (isQuick) {
             this.changeDuration(this.quickDuration)
         }
