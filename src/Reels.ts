@@ -1,15 +1,19 @@
 import * as PIXI from 'pixi.js'
 import { Reel } from './Reel'
-import { delay } from '.'
+import { delay, eventEmitter } from '.'
 import { SoundManager } from './SoundManager'
 import { SFXDictionary } from './Sounds'
 import { Howl } from 'howler'
+import { Event } from './Event'
 export class Reels extends PIXI.Container {
     private symbolSize = 50
     private _rows: number
     private _columns: number
     private reelsContainer = this.addChild(new PIXI.Container())
     private reelsSpinSound: Howl
+    get animationDuration() {
+        return (this.reelsContainer.children[0] as Reel).animationDuration
+    }
     constructor(numberOfRows: number, numberOfReels: number) {
         super()
         this._rows = numberOfRows
@@ -19,6 +23,7 @@ export class Reels extends PIXI.Container {
             let reel = this.reelsContainer.addChild(new Reel(this._rows, this.symbolSize))
             reel.x = i * this.symbolSize
         }
+
     }
     get rows() {
         return this._rows
@@ -30,11 +35,12 @@ export class Reels extends PIXI.Container {
         this.reelsContainer.children.forEach(element => { (element as Reel).start() })
         this.reelsSpinSound = SoundManager.playSFX(SFXDictionary.ReelsSpin)
     }
-    async stop(reelsPosition: number[][]) {
+    async stop(reelsPosition: number[][], isQuick = false) {
+        const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
         let promiseArray: Array<Promise<void>> = []
         for (const reel of this.reelsContainer.children) {
             promiseArray.push((reel as Reel).stop(reelsPosition.shift()))
-            await delay(200)
+            await Promise.race([delay(200), quickPromise])
         }
         await Promise.all(promiseArray)
         this.reelsSpinSound.stop()
@@ -42,5 +48,10 @@ export class Reels extends PIXI.Container {
     }
     getSymbol(column: number, row: number) {
         return (this.reelsContainer.children[column] as Reel).getSymbol(row)
+    }
+    setSpeed(value: number) {
+        for (const reel of this.reelsContainer.children) {
+            (reel as Reel).speed = value
+        }
     }
 }

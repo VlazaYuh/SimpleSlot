@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js'
 import { gsap } from 'gsap'
-import { delay } from '.'
+import { delay, eventEmitter } from '.'
 import { textStyles } from './textStyles'
 import { SoundManager } from './SoundManager'
 import { SFXDictionary } from './Sounds'
+import { Event } from './Event'
 
 export class BigWinAnimation extends PIXI.Container {
     private timeline: gsap.core.Timeline
@@ -11,6 +12,7 @@ export class BigWinAnimation extends PIXI.Container {
     private stakeText: PIXI.Text
     private duration = 2
     private fadeDuration = 0.5
+
     constructor() {
         super()
         this.text = this.addChild(new PIXI.Text('WinTemp'))
@@ -21,16 +23,21 @@ export class BigWinAnimation extends PIXI.Container {
         this.stakeText.anchor.set(0.5)
         this.visible = false
     }
-    async animate(win: 'big' | 'super' | 'mega', sum: number) {
+    async animate(win: 'big' | 'super' | 'mega', sum: number, isQuick = false) {
         this.text.text = win === 'big' ? 'Big Win' : win === 'mega' ? 'Mega Win' : 'Super Win'
         this.text.alpha = 1
         this.stakeText.alpha = 1
         this.stakeText.text = `${sum}`
         this.visible = true
         this.createTimeline()
+        const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        const callback = () => {
+            this.timeline.duration(this.duration / 2)
+        }
+        eventEmitter.on(Event.SkipAnimation, callback)
         this.timeline.repeat()
         SoundManager.playSFX(SFXDictionary.BigWin)
-        await delay((this.duration + this.fadeDuration) * 1000)
+        await Promise.race([delay((this.duration + this.fadeDuration) * 1000), Promise.all([quickPromise, delay(this.duration / 2 * 1000)])])
     }
     private createTimeline() {
         this.timeline = gsap.timeline()

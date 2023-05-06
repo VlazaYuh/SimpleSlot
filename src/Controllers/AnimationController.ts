@@ -7,6 +7,7 @@ import { getSpinResult } from "../spinResult"
 import { Controller } from "./Controller"
 import { Lines } from '../Lines'
 import { BigWinAnimation } from '../BigWinAnimation'
+import { data } from '../Data'
 
 window.gsap = gsap
 export class AnimationController extends Controller {
@@ -21,17 +22,17 @@ export class AnimationController extends Controller {
     }
     protected async stateChangeCallback(state: State): Promise<void> {
         if (state === State.Animation) {
-            await this.linesAnim.playLines()
+            await this.linesAnim.playLines(data.quickSpin)
             const promiseArray: Promise<void>[] = []
             for (let column = 0; column < this.reels.columns; column++) {
                 for (let row = 1; row <= this.reels.rows; row++) {
-                    promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ? 'win' : 'lose'))
+                    promiseArray.push(this.reels.getSymbol(column, row).animate(this.isWinSymbol(row, column) ? 'win' : 'lose', data.quickSpin))
                 }
             }
             const spinResultWinSum = getSpinResult().win.sum
             await Promise.all(promiseArray)
             if (spinResultWinSum >= 30) {
-                await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum)
+                await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum, data.quickSpin)
             }
         }
         this.stateCompleted()

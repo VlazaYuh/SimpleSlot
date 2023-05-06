@@ -5,11 +5,12 @@ import { CustomEase } from "gsap/CustomEase"
 import { Symbol } from './Symbol'
 import { SoundManager } from './SoundManager'
 import { SFXDictionary } from './Sounds'
+import { data } from './Data'
 
 gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
-    private speed = 5
+    private _speed = 5
     private symbolSize: number
     private running = false
     private stopping: boolean
@@ -17,10 +18,20 @@ export class Reel extends PIXI.Container {
     private containerOffset: number
     private queue: Array<number> = []
     private stopResolve
+    private _animationDuration = 0.5
+    get animationDuration(){
+        return this._animationDuration
+    }
+    set speed(time: number) {
+        this._speed = time
+    }
+    get speed() {
+        return this._speed
+    }
     private animation = async () => {
         await gsap.to(this.container, {
             y: -this.symbolSize, ease: CustomEase.create
-                ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: 0.5
+                ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: this._animationDuration
         })
         this.container.children.forEach((child) => child.y += this.symbolSize)
         this.container.y = this.containerOffset
@@ -30,7 +41,7 @@ export class Reel extends PIXI.Container {
         SoundManager.playSFX(SFXDictionary.ReelsSpinEnd)
     }
     private moveContainer = (delta: number) => {
-        while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
+        while (this.container.y + delta * this._speed >= this.containerOffset + this.symbolSize) {
             this.container.y -= this.symbolSize
             this.container.children.forEach((child) => child.y += this.symbolSize)
             this.container.children[0].destroy()
@@ -44,7 +55,7 @@ export class Reel extends PIXI.Container {
                 return
             }
         }
-        this.container.y += delta * this.speed
+        this.container.y += delta * this._speed
     }
     constructor(private readonly rows: number, symbolsize: number) {
         super()
@@ -99,4 +110,5 @@ export class Reel extends PIXI.Container {
     getSymbol(position: number) {
         return (this.container.children[this.rows - position] as Symbol)
     }
+
 }
