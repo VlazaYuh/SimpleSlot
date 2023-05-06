@@ -11,9 +11,6 @@ export class Reels extends PIXI.Container {
     private _columns: number
     private reelsContainer = this.addChild(new PIXI.Container())
     private reelsSpinSound: Howl
-    get animationDuration() {
-        return (this.reelsContainer.children[0] as Reel).animationDuration
-    }
     constructor(numberOfRows: number, numberOfReels: number) {
         super()
         this._rows = numberOfRows
@@ -23,7 +20,6 @@ export class Reels extends PIXI.Container {
             let reel = this.reelsContainer.addChild(new Reel(this._rows, this.symbolSize))
             reel.x = i * this.symbolSize
         }
-
     }
     get rows() {
         return this._rows

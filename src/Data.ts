@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
 export const data = window.data = {
-    quickSpin: false,
+    turboMode: false,
     balance: 1000,
 }

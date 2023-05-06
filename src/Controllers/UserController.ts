@@ -1,4 +1,4 @@
-import { eventEmitter, ui } from ".."
+import { eventEmitter, stateMachine, ui } from ".."
 import { data } from "../Data"
 import { Event } from "../Event"
 import { State } from "../State"
@@ -37,9 +37,12 @@ export class UserController extends Controller {
     }
     private subscribtions() {
         window.addEventListener('keydown', (e) => {
-          
             if (e.code === 'Space') {
-                eventEmitter.emit(Event.SkipAnimation)
+                if (stateMachine.currentState === State.Idle) {
+                    eventEmitter.emit(Event.PlayerPressedStart)
+                } else {
+                    eventEmitter.emit(Event.SkipAnimation)
+                }
             }
         })
     }

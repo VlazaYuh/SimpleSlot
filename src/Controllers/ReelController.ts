@@ -16,8 +16,8 @@ export class ReelController extends Controller {
     protected async stateChangeCallback(state: State) {
         if (state === State.Spinning) {
             this.reels.start()
-            const quickPromise = data.quickSpin ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
-            let isQuick = data.quickSpin
+            const quickPromise = data.turboMode ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+            let isQuick = data.turboMode
             const callback = () => {
                 this.reels.setSpeed(10)
                 isQuick = true

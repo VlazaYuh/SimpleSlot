@@ -81,24 +81,39 @@ export class Lines extends PIXI.Container {
     }
     async playLines(isQuick = false) {
         const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        if (isQuick) {
+            this.changeDuration(this.quickDuration)
+        }
         const callback = () => {
-            for (const { id } of getSpinResult().win.lines) {
-                this.timeLines[id].duration(this.quickDuration)
-            }
+            this.changeDuration(this.quickDuration)
         }
         eventEmitter.on(Event.SkipAnimation, callback)
         for (const { id } of getSpinResult().win.lines) {
             this.playLine(id)
         }
-        await Promise.race([delay(this.duration * 1000), Promise.all([quickPromise, delay(this.quickDuration * 1000)])])
+        await Promise.all(this.getTimelinesArray())
         eventEmitter.off(Event.SkipAnimation, callback)
+        this.changeDuration(this.duration)
     }
     playLine(id: number) {
         this.timeLines[id].restart()
+
     }
     getFirstSegment(line: number[]) {
         const position = this.getSymbolPosition(1, line[0])
         position.x -= this.drawOffset
         return { duration: 0, position: position, distance: 0 }
+    }
+    private changeDuration(duration: number) {
+        for (const { id } of getSpinResult().win.lines) {
+            this.timeLines[id].duration(duration)
+        }
+    }
+    private getTimelinesArray() {
+        const timeLineArray: gsap.core.Timeline[] = []
+        for (const { id } of getSpinResult().win.lines) {
+            timeLineArray.push(this.timeLines[id])
+        }
+        return timeLineArray
     }
 }
