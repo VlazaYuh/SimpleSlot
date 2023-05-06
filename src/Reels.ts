@@ -32,7 +32,10 @@ export class Reels extends PIXI.Container {
         this.reelsSpinSound = SoundManager.playSFX(SFXDictionary.ReelsSpin)
     }
     async stop(reelsPosition: number[][], isQuick = false) {
-        const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        const quickPromise = isQuick ? Promise.resolve : new Promise(resolve => {
+            eventEmitter.on(Event.SkipAnimation, resolve)
+
+        })
         let promiseArray: Array<Promise<void>> = []
         for (const reel of this.reelsContainer.children) {
             promiseArray.push((reel as Reel).stop(reelsPosition.shift()))
@@ -45,9 +48,9 @@ export class Reels extends PIXI.Container {
     getSymbol(column: number, row: number) {
         return (this.reelsContainer.children[column] as Reel).getSymbol(row)
     }
-    setSpeed(value: number) {
+    /* setSpeed(value: number) {
         for (const reel of this.reelsContainer.children) {
             (reel as Reel).speed = value
         }
-    }
+    } */
 }
