@@ -29,7 +29,7 @@ export class Symbol extends PIXI.Sprite {
         }
         if (animationName === 'lose') {
             this.tint = 0x818181
-            await Promise.race([delay(duration*1000),new Promise(resolve=>eventEmitter.on(Event.SkipAnimation,resolve))])
+            await Promise.race([delay(duration * 1000), new Promise(resolve => eventEmitter.on(Event.SkipAnimation, resolve))])
             this.tint = 0xFFFFFF
         }
 

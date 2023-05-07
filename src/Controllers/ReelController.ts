@@ -19,9 +19,7 @@ export class ReelController extends Controller {
             const quickPromise = data.turboMode ? Promise.resolve : new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
             let isQuick = data.turboMode
             const callback = () => {
-                if (!isQuick) {
-                    isQuick = true
-                }
+                isQuick = true
             }
             eventEmitter.on(Event.SkipAnimation, callback)
             await Promise.race([delay(this.spinTimeMS), quickPromise])

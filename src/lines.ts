@@ -83,11 +83,11 @@ export class Lines extends PIXI.Container {
         new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
         const timeLines: gsap.core.Timeline[] = []
         const callback = () => {
-            timeLines.forEach(timeline=>timeline.duration(this.quickDuration))
+            timeLines.forEach(timeline => timeline.duration(this.quickDuration))
         }
         eventEmitter.on(Event.SkipAnimation, callback)
         for (const { id } of getSpinResult().win.lines) {
-            this.playLine(id,isQuick)
+            this.playLine(id, isQuick)
             timeLines.push(this.timeLines[id])
         }
         await Promise.all(timeLines)

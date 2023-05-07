@@ -48,9 +48,4 @@ export class Reels extends PIXI.Container {
     getSymbol(column: number, row: number) {
         return (this.reelsContainer.children[column] as Reel).getSymbol(row)
     }
-    /* setSpeed(value: number) {
-        for (const reel of this.reelsContainer.children) {
-            (reel as Reel).speed = value
-        }
-    } */
 }
