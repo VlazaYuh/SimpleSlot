@@ -5,11 +5,15 @@ import { CustomEase } from "gsap/CustomEase"
 import { Symbol } from './Symbol'
 import { SoundManager } from './SoundManager'
 import { SFXDictionary } from './Sounds'
+import { data } from './Data'
+import { eventEmitter } from '.'
+import { Event } from './Event'
 
 gsap.registerPlugin(CustomEase)
 export class Reel extends PIXI.Container {
     private container = this.addChild(new PIXI.Container())
     private speed = 5
+    private quickSpeed = 10
     private symbolSize: number
     private running = false
     private stopping: boolean
@@ -17,10 +21,13 @@ export class Reel extends PIXI.Container {
     private containerOffset: number
     private queue: Array<number> = []
     private stopResolve
+    private animationDuration = 0.5
+    private isQuick = false
+
     private animation = async () => {
         await gsap.to(this.container, {
             y: -this.symbolSize, ease: CustomEase.create
-                ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: 0.5
+                ("custom", "M0,0 C0,0 0.254,0.456 0.356,0.614 0.418,0.71 0.582,1.021 0.68,1.06 0.752,1.088 0.797,1.066 0.882,1.048 1.018,1.018 1,1 1,1 "), duration: this.animationDuration
         })
         this.container.children.forEach((child) => child.y += this.symbolSize)
         this.container.y = this.containerOffset
@@ -30,7 +37,7 @@ export class Reel extends PIXI.Container {
         SoundManager.playSFX(SFXDictionary.ReelsSpinEnd)
     }
     private moveContainer = (delta: number) => {
-        while (this.container.y + delta * this.speed >= this.containerOffset + this.symbolSize) {
+        while (this.container.y + delta * (this.isQuick ? this.quickSpeed : this.speed) >= this.containerOffset + this.symbolSize) {
             this.container.y -= this.symbolSize
             this.container.children.forEach((child) => child.y += this.symbolSize)
             this.container.children[0].destroy()
@@ -44,7 +51,7 @@ export class Reel extends PIXI.Container {
                 return
             }
         }
-        this.container.y += delta * this.speed
+        this.container.y += delta * (this.isQuick ? this.quickSpeed : this.speed)
     }
     constructor(private readonly rows: number, symbolsize: number) {
         super()
@@ -59,6 +66,9 @@ export class Reel extends PIXI.Container {
         if (this.running) {
             return
         }
+        this.isQuick = data.turboMode
+        new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        eventEmitter.on(Event.SkipAnimation, this.callback)
         PIXI.Ticker.shared.add(this.moveContainer)
         this.running = true
         this.stopping = false
@@ -81,7 +91,11 @@ export class Reel extends PIXI.Container {
                 }
             }
             this.stopping = true
+        }).then(() => {
+            this.isQuick = false
+            eventEmitter.off(Event.SkipAnimation, this.callback)
         })
+
     }
     private createMask() {
         const mask = new PIXI.Graphics()
@@ -98,5 +112,10 @@ export class Reel extends PIXI.Container {
     }
     getSymbol(position: number) {
         return (this.container.children[this.rows - position] as Symbol)
+    }
+    private callback = () => {
+        if (!this.isQuick) {
+            this.isQuick = true
+        }
     }
 }

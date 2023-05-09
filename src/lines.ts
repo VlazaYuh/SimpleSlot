@@ -3,11 +3,14 @@ import { gsap } from 'gsap'
 import { Reels } from "./Reels"
 import { getLinesDict } from "./linesDict"
 import { getSpinResult } from "./spinResult"
-import { delay } from '.'
+import { delay, eventEmitter } from '.'
 import { Emitter, EmitterConfigV3, upgradeConfig } from '@pixi/particle-emitter'
+import { Event } from './Event'
+import { data } from './Data'
 export class Lines extends PIXI.Container {
     private timeLines: { [lineId: number]: gsap.core.Timeline } = {}
     private duration = 0.4
+    private quickDuration = 0.1
     private drawOffset = 25
     constructor(private reels: Reels) {
         super()
@@ -76,13 +79,22 @@ export class Lines extends PIXI.Container {
         }
         return timeLine
     }
-    playLines() {
-        for (const { id } of getSpinResult().win.lines) {
-            this.playLine(id)
+    async playLines(isQuick = false) {
+        new Promise(resolve => { eventEmitter.on(Event.SkipAnimation, resolve) })
+        const timeLines: gsap.core.Timeline[] = []
+        const callback = () => {
+            timeLines.forEach(timeline => timeline.duration(this.quickDuration))
         }
-        return delay(this.duration * 1000)
+        eventEmitter.on(Event.SkipAnimation, callback)
+        for (const { id } of getSpinResult().win.lines) {
+            this.playLine(id, isQuick)
+            timeLines.push(this.timeLines[id])
+        }
+        await Promise.all(timeLines)
+        eventEmitter.off(Event.SkipAnimation, callback)
     }
-    playLine(id: number) {
+    playLine(id: number, isQuick = false) {
+        this.timeLines[id].duration(isQuick ? this.quickDuration : this.duration)
         this.timeLines[id].restart()
     }
     getFirstSegment(line: number[]) {

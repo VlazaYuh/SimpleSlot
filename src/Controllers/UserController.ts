@@ -1,4 +1,5 @@
-import { eventEmitter, ui } from ".."
+import { eventEmitter, stateMachine, ui } from ".."
+import { data } from "../Data"
 import { Event } from "../Event"
 import { State } from "../State"
 import { Controller } from "./Controller"
@@ -19,13 +20,30 @@ export class UserController extends Controller {
             //TODO implement up/down test
         })
         eventEmitter.on(Event.AutoPlayStopped, () => this.autoPlayConfig.isOn = false)
+        this.subscribtions()
     }
     protected stateChangeCallback(state: State): void {
         if (state !== State.Idle) {
             this.stateCompleted()
         }
-        if (state === State.Spinning && this.autoPlay && !this.autoPlayConfig.count--) {
+        if (state === State.Spinning && this.autoPlay && !this.autoPlayConfig.count-- || this.checkMinMax()) {
             this.autoPlayConfig.isOn = false
         }
+    }
+    private checkMinMax() {
+        if (this.autoPlayConfig.downLimit !== 0 && this.autoPlayConfig.upLimit !== 0) {
+            return (data.balance <= this.autoPlayConfig.downLimit || data.balance >= this.autoPlayConfig.upLimit)
+        }
+    }
+    private subscribtions() {
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                if (stateMachine.currentState === State.Idle) {
+                    eventEmitter.emit(Event.PlayerPressedStart)
+                } else {
+                    eventEmitter.emit(Event.SkipAnimation)
+                }
+            }
+        })
     }
 }
