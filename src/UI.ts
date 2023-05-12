@@ -4,12 +4,12 @@ import { State } from './State'
 import { StartButton } from './StartButton'
 import { StakeChanger } from './StakeChanger'
 import { Event } from './Event'
-import { SideMenuButton } from './SideMenuButton'
 import { SideMenu } from './SideMenu'
 import { Options } from './Options'
 import { AutoPlayMenu } from './AutoPlayMenu'
 import { Fade } from './Fade'
 import { AutoPlayButton } from './AutoPlayButton'
+import { data } from './Data'
 
 export class UI extends PIXI.Container {
     private buttonStart: StartButton
@@ -35,6 +35,12 @@ export class UI extends PIXI.Container {
         this.autoPlayStop = this.addChild(new AutoPlayButton('Stop'))
         this.autoPlayStop.position = this.autoPlayOpen.position
         this.autoPlayStop.visible = false
+        const turboModeOff = this.addChild(new AutoPlayButton('OFF'))
+        turboModeOff.position.set(width / 2 + 240, height / 2 + 205)
+        turboModeOff.visible === data.turboMode
+        const turboModeOn = this.addChild(new AutoPlayButton('TurboMode'))
+        turboModeOn.position = turboModeOff.position
+        turboModeOn.visible !== data.turboMode
         const fade = this.addChild(new Fade(width, height))
         this.autoPlayMenu = this.addChild(new AutoPlayMenu())
         this.autoPlayMenu.position.set(width / 2, height / 2)
@@ -51,7 +57,19 @@ export class UI extends PIXI.Container {
         eventEmitter.on(Event.AutoPlayStarted, () => {
             this.autoPlayVisibility(true)
         })
+        turboModeOff.on('pointerup', () => {
+            data.turboMode = false
+            turboModeOff.visible = false
+            turboModeOn.visible = true
+        })
+        turboModeOn.on('pointerup', () => {
+            data.turboMode = true
+            turboModeOn.visible = false
+            turboModeOff.visible = true
+        })
         stateMachine.onStateChange(async state => {
+            turboModeOff.disabled = state !== State.Idle
+            turboModeOn.disabled = state !== State.Idle
             this.buttonStart.disabled = state !== State.Idle
             this.autoPlayOpen.disabled = state === State.Spinning || state === State.Animation
             if ((userController.autoPlay && state !== State.Idle) !== this.autoPlayStop.visible) {
