@@ -2,6 +2,7 @@ import { eventEmitter, stateMachine, ui } from ".."
 import { data } from "../Data"
 import { Event } from "../Event"
 import { State } from "../State"
+import { getSpinResult } from "../spinResult"
 import { Controller } from "./Controller"
 export class UserController extends Controller {
     private autoPlayConfig = { isOn: false, count: 0, upLimit: 0, downLimit: 0 }
@@ -26,13 +27,13 @@ export class UserController extends Controller {
         if (state !== State.Idle) {
             this.stateCompleted()
         }
-        if (state === State.Spinning && this.autoPlay && !this.autoPlayConfig.count-- || this.checkMinMax()) {
+        if (state === State.Spinning && this.autoPlay && !getSpinResult().freeSpin.isFreeSpin && !this.autoPlayConfig.count-- || this.checkMinMax()) {
             this.autoPlayConfig.isOn = false
         }
     }
     private checkMinMax() {
         if (this.autoPlayConfig.downLimit !== 0 && this.autoPlayConfig.upLimit !== 0) {
-            return (data.balance <= this.autoPlayConfig.downLimit || data.balance >= this.autoPlayConfig.upLimit)
+            return (getSpinResult().balance <= this.autoPlayConfig.downLimit || getSpinResult().balance >= this.autoPlayConfig.upLimit)
         }
     }
     private subscribtions() {

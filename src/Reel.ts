@@ -23,7 +23,16 @@ export class Reel extends PIXI.Container {
     private stopResolve
     private animationDuration = 0.5
     private isQuick = false
-
+    constructor(private readonly rows: number, symbolsize: number, reelPosition?: number[]) {
+        super()
+        this.symbolSize = symbolsize
+        this.container.y = -this.symbolSize * (rows - 1) / 2
+        this.containerOffset = this.container.y
+        this.createMask()
+        if (reelPosition) { this.queue = reelPosition }
+        this.createSymbols(rows + 1)
+        this.yOffset = (this.symbolSize * rows)
+    }
     private animation = async () => {
         await gsap.to(this.container, {
             y: -this.symbolSize, ease: CustomEase.create
@@ -52,15 +61,6 @@ export class Reel extends PIXI.Container {
             }
         }
         this.container.y += delta * (this.isQuick ? this.quickSpeed : this.speed)
-    }
-    constructor(private readonly rows: number, symbolsize: number) {
-        super()
-        this.symbolSize = symbolsize
-        this.container.y = -this.symbolSize * (rows - 1) / 2
-        this.containerOffset = this.container.y
-        this.createMask()
-        this.createSymbols(rows + 1)
-        this.yOffset = (this.symbolSize * rows)
     }
     start() {
         if (this.running) {

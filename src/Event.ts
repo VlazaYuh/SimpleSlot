@@ -8,5 +8,6 @@ export enum Event {
     AutoPlayClicked = 'autoPlayClicked',
     AutoPlayStarted = 'autoPlayStarted',
     AutoPlayStopped = 'autoPlayStopped',
-    SkipAnimation = 'skipAnimation'
+    SkipAnimation = 'skipAnimation',
+    BalanceChanged = 'balanceChanged',
 }
