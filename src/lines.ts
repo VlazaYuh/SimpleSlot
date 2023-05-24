@@ -49,7 +49,6 @@ export class Lines extends PIXI.Container {
     private getTimeLine(lineId: number, emitterConfig: EmitterConfigV3) {
         const container = this.addChild(new PIXI.ParticleContainer(500))
         const emitter = new Emitter(container, emitterConfig)
-
         const segments = this.getLineSegments(lineId)
         const { x, y } = segments[0].position
         const fakeObject = { x, y }

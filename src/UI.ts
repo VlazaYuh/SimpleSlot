@@ -12,7 +12,6 @@ import { AutoPlayButton } from './AutoPlayButton'
 import { data } from './Data'
 import { textStyles } from './textStyles'
 import { getSpinResult } from './spinResult'
-
 export class UI extends PIXI.Container {
     private buttonStart: StartButton
     private stakeContainer: StakeChanger
