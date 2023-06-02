@@ -32,7 +32,6 @@ export class Symbol extends PIXI.Sprite {
             await Promise.race([delay(duration * 1000), new Promise(resolve => eventEmitter.on(Event.SkipAnimation, resolve))])
             this.tint = 0xFFFFFF
         }
-
     }
     set id(value: number) {
         if (value === this._id) {

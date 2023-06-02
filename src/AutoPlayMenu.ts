@@ -20,7 +20,6 @@ export class AutoPlayMenu extends PIXI.Container {
     private maxValue = 300
     private count = getAutoPlayDict()[this.index]
     autoPlayStarted = false
-
     constructor() {
         super()
         this.createElements()
@@ -51,7 +50,7 @@ export class AutoPlayMenu extends PIXI.Container {
         eventEmitter.on(Event.CloseDialogs, () => this.visible = false)
     }
     private createElements() {
-        const countPosition =[-80, -75]
+        const countPosition = [-80, -75]
         this.visible = false
         const background = this.addChild(new PIXI.Sprite(PIXI.Texture.from('assets/optionsMenu.png')))
         background.anchor.set(0.5)

@@ -5,10 +5,11 @@ import { State } from "../State"
 import { getLinesDict } from "../linesDict"
 import { getSpinResult } from "../spinResult"
 import { Controller } from "./Controller"
-import { Lines } from '../Lines'
+import { Lines } from '../lines'
 import { BigWinAnimation } from '../BigWinAnimation'
 import { data } from '../Data'
-
+import { eventEmitter } from '..'
+import { Event } from '../Event'
 window.gsap = gsap
 export class AnimationController extends Controller {
     private reels: Reels
@@ -33,6 +34,9 @@ export class AnimationController extends Controller {
             await Promise.all(promiseArray)
             if (spinResultWinSum >= 30) {
                 await this.bigWinAnim.animate(spinResultWinSum >= 100 ? 'super' : spinResultWinSum >= 60 ? 'mega' : 'big', getSpinResult().win.sum, data.turboMode)
+            }
+            if (getSpinResult().win) {
+                eventEmitter.emit(Event.BalanceChanged)
             }
         }
         this.stateCompleted()

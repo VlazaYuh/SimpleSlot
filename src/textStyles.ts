@@ -3,7 +3,6 @@ export const textStyles = {
     stakeStyle: new PIXI.TextStyle({
         fontFamily: 'Blrrpix',
         fontSize: 36,
-        fontStyle: 'italic',
         fontWeight: 'bold',
         fill: ['#ffffff', '#00ff99'], // gradient
         stroke: '#4a1850',
@@ -16,6 +15,7 @@ export const textStyles = {
         wordWrap: true,
         wordWrapWidth: 440,
         lineJoin: 'round',
+        align: 'center'
     }),
     winStyle: new PIXI.TextStyle({
         fontFamily: 'Blrrpix',

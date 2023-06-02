@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { Button } from './Button'
-
 export class Checkbox extends Button {
     private box: PIXI.Sprite
     private check: PIXI.Sprite

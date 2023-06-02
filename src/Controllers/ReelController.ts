@@ -3,15 +3,14 @@ import { data } from "../Data"
 import { Event } from "../Event"
 import { Reels } from "../Reels"
 import { State } from "../State"
-import { getSpinResult } from "../spinResult"
+import { getSpinResult, sendRequest } from "../spinResult"
 import { Controller } from "./Controller"
 export class ReelController extends Controller {
     private reels: Reels
     private spinTimeMS = 5000
-    constructor(reels: Reels) {
+    constructor(reels: Reels,) {
         super()
         this.reels = reels
-
     }
     protected async stateChangeCallback(state: State) {
         if (state === State.Spinning) {
@@ -22,7 +21,7 @@ export class ReelController extends Controller {
                 isQuick = true
             }
             eventEmitter.on(Event.SkipAnimation, callback)
-            await Promise.race([delay(this.spinTimeMS), quickPromise])
+            await Promise.all([Promise.race([delay(this.spinTimeMS), quickPromise]), sendRequest()])
             await this.reels.stop(getSpinResult().table, isQuick)
             eventEmitter.off(Event.SkipAnimation, callback)
         }

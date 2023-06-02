@@ -2,7 +2,6 @@ import { loadingGraphics } from ".."
 import { State } from "../State"
 import { Controller } from "./Controller"
 import * as PIXI from 'pixi.js'
-
 export class LoadingController extends Controller {
     progress: number
     protected async stateChangeCallback(state: State) {

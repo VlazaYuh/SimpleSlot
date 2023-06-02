@@ -5,7 +5,6 @@ import { textStyles } from './textStyles'
 import { SoundManager } from './SoundManager'
 import { SFXDictionary } from './Sounds'
 import { Event } from './Event'
-
 export class BigWinAnimation extends PIXI.Container {
     private timeline: gsap.core.Timeline
     private text: PIXI.Text
